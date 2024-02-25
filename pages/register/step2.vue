@@ -85,12 +85,12 @@ export default {
   data() {
     return {
       selectedValue: null,
-      selectedCity: null,
-      selectedRegion: null,
       img: "",
       axios: useNuxtApp().$axios,
       formData: "",
       img2: "../assets/imgs/logo1.png",
+      selectedCity: null,
+      selectedRegion: null,
       cities: [],
       regions: [],
       userImg: "",
@@ -98,7 +98,7 @@ export default {
     };
   },
   mounted() {
-    this.token = localStorage.getItem("token");
+    this.token = useAuthStore().user.token
     console.log(this.token);
     this.axios
       .get("/cities")
@@ -108,6 +108,7 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
+  
   },
   methods: {
     updateImageUrl(newImageUrl) {

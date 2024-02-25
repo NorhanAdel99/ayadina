@@ -6,27 +6,25 @@
   <div class="row flex-wrap-reverse">
     <div class="col-lg-8">
       <div class="flex-between border-bottom mb-3 pb-3">
-        <h6 class="title-border">مقدمي الخدمة</h6>
-        <div>
-          <div class="">
-            <Dropdown
-              v-model="selectedCity"
-              :options="cities"
-              optionLabel="name"
-              placeholder="select a city"
-              class="w-100 form-control d-flex justify-content-between"
-              @change="selectRegions"
-            />
-          </div>
-          <div class="">
-            <Dropdown
-              v-model="selectedRegion"
-              :options="regions"
-              optionLabel="name"
-              placeholder="select a region"
-              class="w-100 form-control d-flex justify-content-between"
-            />
-          </div>
+        <h6 class="title-border lg">مقدمي الخدمة</h6>
+        <div class="d-flex align-items-center gap-10">
+          <Dropdown
+            v-model="selectedCity"
+            :options="cities"
+            optionLabel="name"
+            placeholder="select a city"
+            class=" form-control d-flex justify-content-between fixedBox"
+            @change="onCityChange"
+          />
+          <Dropdown
+            v-model="selectedRegion"
+            :options="regions"
+            optionLabel="name"
+            placeholder="select a region"
+            class=" form-control d-flex justify-content-between fixedBox"
+            @change="onRegionChange"
+          />
+          <input type="search" class="form-control fixedBox" v-model="searchProviders"  @input="handleSearch">
         </div>
       </div>
       <div class="row">
@@ -97,6 +95,12 @@ export default {
     return {
       // categoryId: useRoute().params.id,
       axios: useNuxtApp().$axios,
+      fd: null,
+      selectedCity: null,
+      selectedRegion: null,
+      cities: [],
+      regions: [],
+      searchProviders: '',
       Requests: [
         {
           id: "c1",
@@ -149,14 +153,54 @@ export default {
         console.log(error);
       });
   },
+  mounted() {
+    this.axios
+      .get("/cities")
+      .then((response) => {
+        this.cities = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  },
   methods: {
+    selectRegions() {
+      this.axios
+        .get(`regions/${this.selectedCity.id}`)
+        .then((response) => {
+          this.regions = response.data.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    
+    },
+
     async selectCategory(id) {
-      await this.axios
-        .post("/filter-providers", {
+      if (this.selectedCity != null) {
+        this.fd = {
           category_id: useRoute().params.id,
           sub_category_id: id,
-        })
+          city_id: this.selectedCity.id,
+        };
+      } else if (this.selectedCity !== null && this.selectedRegions !== nul){
+        this.fd = {
+          category_id: useRoute().params.id,
+          sub_category_id: id,
+          city_id: this.selectedCity.id,
+          region_id: this.selectedRegion.id,
+
+        };
+      } else {
+        this.fd = {
+          category_id: useRoute().params.id,
+          sub_category_id: id,
+        };
+      }
+      await this.axios
+        .post("/filter-providers", this.fd)
         .then((response) => {
+          console.log(response)
           if (response.data.key == "success") {
             this.providers = response.data.data.providers;
             if (this.providers.length == 0) {
@@ -166,47 +210,21 @@ export default {
             }
           } else {
             alert("noData");
+            console.log(response)
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    onCityChange() {
+      this.selectCategory(); 
+      this.selectRegions();
+    },
+    onRegionChange(){
+      this.selectCategory();
+    }
   },
 };
 </script>
-<style>
-.p-listbox {
-  border: 0;
-  padding: 0;
-  position: relative;
-}
-
-.p-listbox-header {
-  padding: 0 !important;
-}
-
-.p-listbox-list-wrapper {
-  position: absolute;
-  top: 54px;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  background: white;
-  border-top: unset;
-  border-radius: 10px;
-  display: none;
-}
-
-.p-listbox-list-wrapper.active {
-  display: block;
-}
-
-.p-listbox-filter:focus + .p-listbox-list-wrappe {
-  display: block !important;
-  /* background: red !important; */
-}
-.p-carousel-indicators {
-  display: none !important;
-}
-</style>
+<style></style>
