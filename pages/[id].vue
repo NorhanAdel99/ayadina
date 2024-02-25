@@ -3,11 +3,11 @@
   <div class="text-center">
     <!-- {{ $t('hello') }} -->
   </div>
-  <div class="row flex-wrap-reverse">
+  <div class="row flex-wrap">
     <div class="col-lg-8">
-      <div class="flex-between border-bottom mb-3 pb-3">
+      <div class="flex-between flex-wrap border-bottom mb-3 pb-3 gap-5">
         <h6 class="title-border lg">مقدمي الخدمة</h6>
-        <div class="d-flex align-items-center gap-10">
+        <div class="d-flex align-items-center gap-10 flex-wrap">
           <Dropdown
             v-model="selectedCity"
             :options="cities"
@@ -21,7 +21,7 @@
             :options="regions"
             optionLabel="name"
             placeholder="select a region"
-            class=" form-control d-flex justify-content-between fixedBox"
+            class=" form-control d-flex justify-content-between fixedBox "
             @change="onRegionChange"
           />
           <input type="search" class="form-control fixedBox" v-model="searchProviders"  @input="handleSearch">
@@ -68,17 +68,17 @@
           <h6 class="title-border">الطلبات الخاصة</h6>
         </div>
         <div
-          v-for="req in Requests"
-          :key="req.id"
+          v-for="order in mySpecialOrders"
+          :key="order.id"
           class="rounded-2 p-2 main_border mb-3"
         >
           <div class="flex-between">
             <div>
-              <h6 class="mb-2">{{ req.id }}</h6>
-              <h6>{{ req.city }}</h6>
+              <h6 class="mb-2 main_color">{{ order.title }}</h6>
+              <h6>{{ order.region }}</h6>
             </div>
 
-            <NuxtLink :to="'/specialOrder/' + req.id" class="text-muted">
+            <NuxtLink :to="'/specialOrder/' + order.id" class="text-muted">
               <font-awesome-icon icon="fa-solid fa-chevron-left" />
             </NuxtLink>
           </div>
@@ -101,34 +101,7 @@ export default {
       cities: [],
       regions: [],
       searchProviders: '',
-      Requests: [
-        {
-          id: "c1",
-          title: "تمارين",
-          city: "جدة",
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-        {
-          id: "c2",
-          mainSection: "تمارين",
-          city: "جدة",
-
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-        {
-          id: "c2",
-          mainSection: "تمارين",
-          city: "جدة",
-
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-      ],
+      mySpecialOrders: [],
       providers: [],
     };
   },
@@ -136,6 +109,7 @@ export default {
     await this.axios
       .post("/filter-providers", {
         category_id: useRoute().params.id,
+        search: this.ser
       })
       .then((response) => {
         if (response.data.key == "success") {
@@ -162,6 +136,14 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
+      this.axios.get(`/special-orders/${useRoute().params.id}`)
+      .then((response) =>{
+        this.mySpecialOrders = response.data.data.special_orders
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
   methods: {
     selectRegions() {
@@ -175,7 +157,6 @@ export default {
         });
     
     },
-
     async selectCategory(id) {
       if (this.selectedCity != null) {
         this.fd = {
@@ -189,13 +170,15 @@ export default {
           sub_category_id: id,
           city_id: this.selectedCity.id,
           region_id: this.selectedRegion.id,
-
         };
       } else {
         this.fd = {
           category_id: useRoute().params.id,
           sub_category_id: id,
         };
+      }
+      if (this.searchProviders.trim() !== '') {
+        this.fd.search = this.searchProviders.trim();
       }
       await this.axios
         .post("/filter-providers", this.fd)
@@ -223,6 +206,9 @@ export default {
     },
     onRegionChange(){
       this.selectCategory();
+    },
+    handleSearch(){
+      this.selectCategory()
     }
   },
 };
