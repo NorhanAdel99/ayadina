@@ -22,7 +22,7 @@
 
           <ul
             class="d-flex align-items-center gap-20 project-nav"
-            v-if="isAuthentiated"
+            v-if="isAuthenticated"
           >
             <li>
               <NuxtLink :to="localePath('/')" class="main_color">
@@ -80,7 +80,7 @@
     </header>
     <div class="container">
       <div class="s-space">
-        <h1 class="text-danger">{{ $t("home_title") }}</h1>
+        <!-- <h1 class="text-danger">{{ $t("home_title") }}</h1> -->
         <NuxtPage />
       </div>
     </div>
