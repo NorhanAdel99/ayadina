@@ -85,5 +85,6 @@ export default {
     display: flex;
     flex-direction: row-reverse;
 }
+
 </style>
 

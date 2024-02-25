@@ -531,13 +531,19 @@ header {
   position: relative;
   &::after {
     content: "";
-    content: "";
     width: 100%;
-    height: 2px;
+    height: 1px;
     background-color: #12a7d8;
     position: absolute;
     bottom: -1.11rem;
     right: 0;
+  }
+  &.lg{
+    &::after {
+      height: 1px;
+   
+      bottom: -1.6rem;
+  }
   }
 }
 // contactUs
@@ -567,10 +573,49 @@ header {
 }
 .categoryTab {
   gap: 10px;
-  direction: rtl;
   @include center;
+  flex-direction: row-reverse;
   color: $main-color;
+  cursor: pointer;
 }
+
+.p-listbox {
+  border: 0;
+  padding: 0;
+  position: relative;
+}
+
+.p-listbox-header {
+  padding: 0 !important;
+}
+
+.p-listbox-list-wrapper {
+  position: absolute;
+  top: 54px;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: unset;
+  border-radius: 10px;
+  display: none;
+}
+
+.p-listbox-list-wrapper.active {
+  display: block;
+}
+
+.p-listbox-filter:focus + .p-listbox-list-wrappe {
+  display: block !important;
+  /* background: red !important; */
+}
+.p-carousel-indicators {
+  display: none !important;
+}
+.fixedBox {
+  width: 200px !important;
+}
+
 
 .providerImg {
   width: 100%;
