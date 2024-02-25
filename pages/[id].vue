@@ -3,30 +3,28 @@
   <div class="text-center">
     <!-- {{ $t('hello') }} -->
   </div>
-  <div class="row flex-wrap-reverse">
+  <div class="row flex-wrap">
     <div class="col-lg-8">
-      <div class="flex-between border-bottom mb-3 pb-3">
-        <h6 class="title-border">مقدمي الخدمة</h6>
-        <div>
-          <div class="">
-            <Dropdown
-              v-model="selectedCity"
-              :options="cities"
-              optionLabel="name"
-              placeholder="select a city"
-              class="w-100 form-control d-flex justify-content-between"
-              @change="selectRegions"
-            />
-          </div>
-          <div class="">
-            <Dropdown
-              v-model="selectedRegion"
-              :options="regions"
-              optionLabel="name"
-              placeholder="select a region"
-              class="w-100 form-control d-flex justify-content-between"
-            />
-          </div>
+      <div class="flex-between flex-wrap border-bottom mb-3 pb-3 gap-5">
+        <h6 class="title-border lg">مقدمي الخدمة</h6>
+        <div class="d-flex align-items-center gap-10 flex-wrap">
+          <Dropdown
+            v-model="selectedCity"
+            :options="cities"
+            optionLabel="name"
+            placeholder="select a city"
+            class=" form-control d-flex justify-content-between fixedBox"
+            @change="onCityChange"
+          />
+          <Dropdown
+            v-model="selectedRegion"
+            :options="regions"
+            optionLabel="name"
+            placeholder="select a region"
+            class=" form-control d-flex justify-content-between fixedBox "
+            @change="onRegionChange"
+          />
+          <input type="search" class="form-control fixedBox" v-model="searchProviders"  @input="handleSearch">
         </div>
       </div>
       <div class="row">
@@ -70,17 +68,17 @@
           <h6 class="title-border">الطلبات الخاصة</h6>
         </div>
         <div
-          v-for="req in Requests"
-          :key="req.id"
+          v-for="order in mySpecialOrders"
+          :key="order.id"
           class="rounded-2 p-2 main_border mb-3"
         >
           <div class="flex-between">
             <div>
-              <h6 class="mb-2">{{ req.id }}</h6>
-              <h6>{{ req.city }}</h6>
+              <h6 class="mb-2 main_color">{{ order.title }}</h6>
+              <h6>{{ order.region }}</h6>
             </div>
 
-            <NuxtLink :to="'/specialOrder/' + req.id" class="text-muted">
+            <NuxtLink :to="'/specialOrder/' + order.id" class="text-muted">
               <font-awesome-icon icon="fa-solid fa-chevron-left" />
             </NuxtLink>
           </div>
@@ -97,34 +95,13 @@ export default {
     return {
       // categoryId: useRoute().params.id,
       axios: useNuxtApp().$axios,
-      Requests: [
-        {
-          id: "c1",
-          title: "تمارين",
-          city: "جدة",
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-        {
-          id: "c2",
-          mainSection: "تمارين",
-          city: "جدة",
-
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-        {
-          id: "c2",
-          mainSection: "تمارين",
-          city: "جدة",
-
-          orderNumber: "17817178",
-          descripe:
-            "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-        },
-      ],
+      fd: null,
+      selectedCity: null,
+      selectedRegion: null,
+      cities: [],
+      regions: [],
+      searchProviders: '',
+      mySpecialOrders: [],
       providers: [],
     };
   },
@@ -132,6 +109,7 @@ export default {
     await this.axios
       .post("/filter-providers", {
         category_id: useRoute().params.id,
+        search: this.ser
       })
       .then((response) => {
         if (response.data.key == "success") {
@@ -149,14 +127,63 @@ export default {
         console.log(error);
       });
   },
+  mounted() {
+    this.axios
+      .get("/cities")
+      .then((response) => {
+        this.cities = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      this.axios.get(`/special-orders/${useRoute().params.id}`)
+      .then((response) =>{
+        this.mySpecialOrders = response.data.data.special_orders
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  },
   methods: {
+    selectRegions() {
+      this.axios
+        .get(`regions/${this.selectedCity.id}`)
+        .then((response) => {
+          this.regions = response.data.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    
+    },
     async selectCategory(id) {
-      await this.axios
-        .post("/filter-providers", {
+      if (this.selectedCity != null) {
+        this.fd = {
           category_id: useRoute().params.id,
           sub_category_id: id,
-        })
+          city_id: this.selectedCity.id,
+        };
+      } else if (this.selectedCity !== null && this.selectedRegions !== nul){
+        this.fd = {
+          category_id: useRoute().params.id,
+          sub_category_id: id,
+          city_id: this.selectedCity.id,
+          region_id: this.selectedRegion.id,
+        };
+      } else {
+        this.fd = {
+          category_id: useRoute().params.id,
+          sub_category_id: id,
+        };
+      }
+      if (this.searchProviders.trim() !== '') {
+        this.fd.search = this.searchProviders.trim();
+      }
+      await this.axios
+        .post("/filter-providers", this.fd)
         .then((response) => {
+          console.log(response)
           if (response.data.key == "success") {
             this.providers = response.data.data.providers;
             if (this.providers.length == 0) {
@@ -166,47 +193,24 @@ export default {
             }
           } else {
             alert("noData");
+            console.log(response)
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    onCityChange() {
+      this.selectCategory(); 
+      this.selectRegions();
+    },
+    onRegionChange(){
+      this.selectCategory();
+    },
+    handleSearch(){
+      this.selectCategory()
+    }
   },
 };
 </script>
-<style>
-.p-listbox {
-  border: 0;
-  padding: 0;
-  position: relative;
-}
-
-.p-listbox-header {
-  padding: 0 !important;
-}
-
-.p-listbox-list-wrapper {
-  position: absolute;
-  top: 54px;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  background: white;
-  border-top: unset;
-  border-radius: 10px;
-  display: none;
-}
-
-.p-listbox-list-wrapper.active {
-  display: block;
-}
-
-.p-listbox-filter:focus + .p-listbox-list-wrappe {
-  display: block !important;
-  /* background: red !important; */
-}
-.p-carousel-indicators {
-  display: none !important;
-}
-</style>
+<style></style>
