@@ -20,9 +20,11 @@
             <transition-group name="fade">
 
             <div class="border-bottom pb-2 mb-2" v-for="notify in notifecation" :key="notify.id">
-                <div v-if="notify.data.type">
+                <div>
                     <div class="d-flex align-content-between justify-content-between">
-                        <NuxtLink  class="text-dark" :to="localePath('/profile')" ><p> {{ notify.data.message }} </p> </NuxtLink>
+                        <NuxtLink  class="text-dark" :to="localePath('/profile/Rate')"  v-if="notify.data.type === 'rate_notify'" ><p> {{ notify.data.message }} </p> </NuxtLink>
+                        <NuxtLink  class="text-dark" :to="localePath('/profile')"  v-if="notify.data.type === 'password_notify'" ><p> {{ notify.data.message }} </p> </NuxtLink>
+                        <!-- <NuxtLink  class="text-dark" :to="localePath('/profile/chat')"  v-else ><p> {{ notify.data.message }} </p> </NuxtLink> -->
                     <small> {{notify.created_at  }}</small>
                     <button @click="deleteNotify(notify.id)">  <font-awesome-icon
                 :icon="['fas', 'trash-can']"
