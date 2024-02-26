@@ -53,7 +53,7 @@ export const useAuthStore = defineStore("auth", {
         .post("/sign-up", { name, email, phone, country_code, password })
         .then((response) => {
           if (response.data.key === "success") {
-            this.toast.successToast(res.data.msg);
+            this.toast.successToast(response.data.msg);
             useRouter().push({ path: "/register/otp" });
           } else if(response.data.key = 'fail') {
             this.toast.errorToast(response.data.msg);

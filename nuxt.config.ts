@@ -71,7 +71,8 @@ export default defineNuxtConfig({
   },
 
   plugins: [
-    "./composables/toastServics.js"
+    "./composables/toastServics.js",
+    "./plugins/firebase.js"
     ],
 });
 
