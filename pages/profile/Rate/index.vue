@@ -1,227 +1,245 @@
 <template>
-    <ui-main-title>
-        الملف الشخصي
-    </ui-main-title>
-    <profile-tabs></profile-tabs>
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <ui-noData v-if="rates.length === 0 ">
-                No rates
-            </ui-noData>
-            <ui-base-card v-else >
-                <div v-for="rate in rates" :key="rate.id" class="mb-3 border-bottom mb-3">
-                    <div class="flex-between mb-3">
-                        <div class="d-flex gap-10">
-                            <img :src="rate.img" class="circleImg">
-                            <div>
-                                <h6>{{ rate.user.name }}</h6>
-                                <p> {{ rate.created_at }}</p>
-                            </div>
-                        </div>
-                        <div class="report" label="Show" @click="visible = true">
-                            <font-awesome-icon icon="fa-solid fa-flag" />
-                            <span>ابلاغ</span>
-                        </div>
-                    </div>
-                    <Rating v-model="rate.rate" :cancel="false" class="mb-3" readonly />
-
-                    <!-- rate -->
-                    <p class="text-muted">
-                        {{ rate.comment }}
-                    </p>
-                </div>
-
-
-            </ui-base-card>
-            
-        </div>
-    </div>
-
-    <Dialog v-model:visible="visible" modal header="ابلاغ" :style="{ width: '50rem' }"
-        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <form @submit.prevent="">
-                    <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name"> الاسم
-                        </inputsFormControl>
-                        <inputsFormControl type="email" name="email" id="ownerName" v-model.trim="name"> الايميل
-                        </inputsFormControl>
-                        <div class="form-group">
-                            <label class="form-label" id="phone">
-                                رقم الجوال
-                                <span class="text-danger"> * </span>
-                            </label>
-                            <div class="with_cun_select">
-                                <input type="number" id="phone" class="main_input form-control" v-model="phone">
-                                <div class="card d-flex justify-content-center dropdown_card">
-                                    <Dropdown v-model="selectedCountry" :options="countries" optionLabel="name">
-                                        <template #value="slotProps">
-                                            <div v-if="slotProps.value" class="flex-group-me">
-                                                <img :alt="slotProps.value.label" :src="slotProps.value.image"
-                                                    style="width: 24px" />
-                                                <div>{{ slotProps.value.code }}</div>
-                                            </div>
-                                            <span v-else>
-                                                {{ slotProps.placeholder }}
-                                            </span>
-                                        </template>
-                                        <template #option="slotProps">
-                                            <div class="flex-group-me">
-                                                <img :alt="slotProps.option.code" :src="slotProps.option.image"
-                                                    width="20rem" />
-                                                <div>{{ slotProps.option.code }}</div>
-                                            </div>
-                                        </template>
-                                    </Dropdown>
-                                </div>
-                            </div>
-                        </div>
-                        <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> موضوع الرسالة
-                        </inputsFormControl>
-                    
-                    <div class="flex-center">
-                        <ui-base-button icon="pi pi-check" aria-label="Close" type="button" class="main_btn"
-                            @click=" visible = false, visible2 = true">
-                            إرسال</ui-base-button>
-                    </div>
-                </form>
-
+  <ui-main-title> الملف الشخصي </ui-main-title>
+  <profile-tabs></profile-tabs>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <ui-noData v-if="rates.length === 0"> No rates </ui-noData>
+      <ui-base-card v-else>
+        <div
+          v-for="rate in rates"
+          :key="rate.id"
+          class="mb-3 border-bottom mb-3"
+        >
+          <div class="flex-between mb-3">
+            <div class="d-flex gap-10">
+              <img :src="rate.img" class="circleImg" />
+              <div>
+                <h6>{{ rate.user.name }}</h6>
+                <p>{{ rate.created_at }}</p>
+              </div>
             </div>
+            <div class="report" label="Show" @click="report(rate.id)">
+              <font-awesome-icon icon="fa-solid fa-flag" />
+              <span>ابلاغ</span>
+            </div>
+          </div>
+          <Rating v-model="rate.rate" :cancel="false" class="mb-3" readonly />
+
+          <!-- rate -->
+          <p class="text-muted">
+            {{ rate.comment }}
+          </p>
         </div>
-    </Dialog>
-    <!-- certain -->
-    <Dialog v-model:visible="visible2" modal :style="{ width: '50rem' }"
-        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-        <font-awesome-icon icon="fa-regular fa-circle-check" class="modal-exclam-mark mb-3 main_color" />
-        <h6 class="text-center mb-3"> تم استقبال بلاغك بنجاح </h6>
-        <div class="flex-center">
-            <ui-base-button mode="main_btn" @click="visible2 = false"> تقييماتي </ui-base-button>
-        </div>
-    </Dialog>
+      </ui-base-card>
+    </div>
+  </div>
+
+  <Dialog
+    v-model:visible="visible"
+    modal
+    header="ابلاغ"
+    :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <form @submit.prevent="complaint">
+          <inputsFormControl
+            type="text"
+            name="name"
+            id="ownerName"
+            v-model.trim="name"
+          >
+            الاسم
+          </inputsFormControl>
+          <inputsFormControl
+            type="email"
+            name="email"
+            id="ownerName"
+            v-model.trim="email"
+          >
+            الايميل
+          </inputsFormControl>
+          <div class="form-group">
+            <label class="form-label" id="phone">
+              رقم الجوال
+              <span class="text-danger"> * </span>
+            </label>
+            <div class="with_cun_select">
+              <input
+                type="number"
+                id="phone"
+                class="main_input form-control"
+                v-model="phone"
+              />
+              <div class="card d-flex justify-content-center dropdown_card">
+                <Dropdown
+                  v-model="selectedCountry"
+                  :options="countries"
+                  optionLabel="name"
+                >
+                  <template #value="slotProps">
+                    <div v-if="slotProps.value" class="flex-group-me">
+                      <img
+                        :alt="slotProps.value.label"
+                        :src="slotProps.value.image"
+                        style="width: 24px"
+                      />
+                      <div>{{ slotProps.value.code }}</div>
+                    </div>
+                    <span v-else>
+                      {{ slotProps.placeholder }}
+                    </span>
+                  </template>
+                  <template #option="slotProps">
+                    <div class="flex-group-me">
+                      <img
+                        :alt="slotProps.option.code"
+                        :src="slotProps.option.image"
+                        width="20rem"
+                      />
+                      <div>{{ slotProps.option.code }}</div>
+                    </div>
+                  </template>
+                </Dropdown>
+              </div>
+            </div>
+          </div>
+          <inputsFormControl
+            type="text"
+            id="bankName"
+            textarea
+            v-model.trim="messege"
+          >
+            موضوع الرسالة
+          </inputsFormControl>
+
+          <div class="flex-center">
+            <ui-base-button class="main_btn"> إرسال</ui-base-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </Dialog>
+  <!-- certain -->
+  <Dialog
+    v-model:visible="visible2"
+    modal
+    :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <font-awesome-icon
+      icon="fa-regular fa-circle-check"
+      class="modal-exclam-mark mb-3 main_color"
+    />
+    <h6 class="text-center mb-3">تم استقبال بلاغك بنجاح</h6>
+    <div class="flex-center">
+      <ui-base-button mode="main_btn" @click="visible2 = false">
+        تقييماتي
+      </ui-base-button>
+    </div>
+  </Dialog>
 </template>
 <script>
-
-
-import Dialog from 'primevue/dialog';
+import Dialog from "primevue/dialog";
 
 // import Rating from 'primevue/rating';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from "@/store/authStore";
 
 export default {
-    components: {
-        Dialog,
+  components: {
+    Dialog,
+  },
+  data() {
+    return {
+      axios: useNuxtApp().$axios,
+      commentId: "",
+      visible: false,
+      visible2: false,
+      value: null,
+      countries: [],
+      code: "",
+      selectedCountry: {
+        code: "+966",
+        // image: require("@/assets/images/Flag.webp"),
+      },
+      rates: [],
+    };
+  },
+  mounted() {
+    this.value = this.rates.map((item) => item.rate);
+    this.token = useAuthStore().token;
+    console.log(this.token);
+    this.axios
+      .get("/my-ratings", {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((res) => {
+        this.rates = res.data.data.data;
+        console.log(res.data.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    /////// country-code
+    this.axios
+      .get("/country-code")
+      .then((response) => {
+        console.log("response: ", response.data.data);
+        this.countries = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  },
+  methods: {
+    report(id) {
+      this.commentId = id;
+      this.visible = true;
+      console.log(this.commentId)
     },
-    data() {
-        return {
-            axios: useNuxtApp().$axios,
-
-            visible: false,
-            visible2: false,
-            value: null,
-            countries: [],
-            code: '',
-            selectedCountry: {
-                code: "+966",
-                // image: require("@/assets/images/Flag.webp"),
-            },
-            rates:   [
-            {
-                "user": {
-                    "id": 1,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Reinhold Kozey"
-                },
-                "created_at": "2023-12-28",
-                "rate": "",
-                "comment": "my ratings 1"
-            },
-            {
-                "user": {
-                    "id": 1,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Reinhold Kozey"
-                },
-                "created_at": "2023-12-12",
-                "rate": "5",
-                "comment": "mu first rating "
-            },
-            {
-                "user": {
-                    "id": 7,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Millie O'Kon I"
-                },
-                "created_at": "2023-12-11",
-                "rate": "5",
-                "comment": "you are good provider"
-            }
-        ],
-        }
-
+    async complaint() {
+      this.code = this.selectedCountry.code.replace(/\+/g, "");
+      this.formData = {
+        user_name: this.name,
+        phone: this.phone,
+        complaint: this.messege,
+        country_code: this.code,
+        email: this.email,
+        comment_id: this.commentId,
+      };
+      await this.axios
+        .post("/complaint", this.formData, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          //     if (response.data.key == "success") {
+          //         console.log('msg: ', response.data.msg)
+          //         console.log('msg: ', response.data.data)
+          //         this.msg = response.data.msg
+          //         if(response.data.key === 'success'){
+          //     this.visible = false,
+          //     this.visible2 = true
+          // }
+          //     } else {
+          //         console.log('error');
+          //     }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
-    mounted() {
-        this.value = this.rates.map(item => item.rate);
-        // this.token = useAuthStore().user.token
-      
-        // this.axios.get('/my-ratings' , {
-        //     headers: {
-        //         Authorization: `Bearer ${this.token}`,
-        //     }
-        // })
-        //     .then((res) => {
-        //         this.rates = res.data.data.data
-        //         console.log(res.data.data.data)
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
-        /////// country-code 
-        this.axios.get('/country-code')
-            .then((response) => {
-                console.log('response: ', response.data.data)
-                this.countries = response.data.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    },
-    methods:{
-        
-        async report() {
-            this.code = this.selectedCountry.code.replace(/\+/g, '')
-            this.formData = {
-                name: this.name,
-                phone: this.phone,
-                message: this.messege,
-                country_code: this.code,
-                email: this.email,
-                comment_id: ''
-            };
-           await  this.axios.post('/send-contact', this.formData)
-                .then((response) => {
-
-                    console.log(response.data.key);
-                    if (response.data.key == "success") {
-                        console.log('msg: ', response.data.msg)
-                        console.log('msg: ', response.data.data)
-                        this.msg = response.data.msg
-                    } else {
-                        console.log('error');
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        }
-    }
-
-
-}
+  },
+};
 </script>
-<style >
-.p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon , 
-.p-rating .p-rating-item.p-rating-item-active .p-rating-icon 
-{
-    color: rgb(255, 221, 0) !important;
+<style>
+.p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon,
+.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+  color: rgb(255, 221, 0) !important;
 }
 </style>

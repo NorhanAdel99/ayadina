@@ -80,7 +80,7 @@
     </header>
     <div class="container">
       <div class="s-space">
-        <!-- <h1 class="text-danger">{{ $t("home_title") }}</h1> -->
+        <h1 class="text-danger">{{ $t("home_title") }}</h1>
         <NuxtPage />
       </div>
     </div>
@@ -235,7 +235,7 @@ export default {
   },
   mounted() {
     this.user = useAuthStore().user;
-    this.token = useAuthStore().user.token;
+    this.token = useAuthStore().token;
     this.CountNotifecation();
   },
 
@@ -248,12 +248,12 @@ export default {
           },
         })
         .then((res) => {
-          this.count = res.data.data.count;
+          this.count = res?.data?.data?.count;
           console.log(res.data.data);
         });
     },
     logOut() {
-      useAuthStore().logOut();
+      useAuthStore().signOut();
       console.log(useAuthStore().user);
       console.log(useAuthStore().isAuthenticated);
     },

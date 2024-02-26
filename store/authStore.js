@@ -30,10 +30,11 @@ export const useAuthStore = defineStore("auth", {
         console.log(res);
 
         if (res.data.key === "success") {
-          this.token = res.data.data.token;
           this.isAuthenticated = true;
 
           this.user = res.data.data;
+          this.token =  this.user.token;
+
 
           this.toast.successToast(res.data.msg);
           useRouter().push({ path: "/" });
@@ -53,7 +54,7 @@ export const useAuthStore = defineStore("auth", {
         .post("/sign-up", { name, email, phone, country_code, password })
         .then((response) => {
           if (response.data.key === "success") {
-            this.toast.successToast(res.data.msg);
+            this.toast.successToast(response.data.msg);
             useRouter().push({ path: "/register/otp" });
           } else if(response.data.key = 'fail') {
             this.toast.errorToast(response.data.msg);
@@ -70,6 +71,7 @@ export const useAuthStore = defineStore("auth", {
           if (response.data.key === "success") {
             this.isAuthenticated = true;
             this.user = response.data.data;
+            this.token =  this.user.token;
             this.toast.successToast(response.data.msg);
             useRouter().push({ path: "/register/step2" });
           } else {
@@ -90,7 +92,10 @@ export const useAuthStore = defineStore("auth", {
         });
         if (res.data.key === "success") {
           this.toast.successToast(res.data.msg);
+          useRouter().push({ path: "/profile" });
+
           this.user = res.data.data;
+          this.token =  this.user.token;
           this.isAuthenticated = true;
         } else {
           this.toast.errorToast(res.data.msg);
@@ -112,6 +117,7 @@ export const useAuthStore = defineStore("auth", {
           res.data.key === "blocked"
         ) {
           this.user = null;
+          this.token = null;
           this.isAuthenticated = false;
           this.toast.successToast('تم تسجيل الخروج بنجاح ');
           useRouter().push({ path: "/" });
