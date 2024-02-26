@@ -148,12 +148,16 @@ export default {
           await useAuthStore().signIn({
             phone: this.phone,
             password: this.password,
-            country_code: this.code
+            country_code: this.code,
+            device_id : 1111111,
+            device_type: web 
           });
         } else if (this.email) {
           await useAuthStore().signIn({
             email: this.email,
             password: this.password,
+            device_id : 1111111,
+            device_type: 'web' 
           });
         }
       } catch (error) {

@@ -93,11 +93,12 @@
     <Dialog v-model:visible="visible2" modal :style="{ width: '50rem' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <font-awesome-icon icon="fa-regular fa-circle-check" class="modal-exclam-mark mb-3 main_color" />
-        <h6 class="text-center mb-3"> تم استقبال بلاغك بنجاح </h6>
+        <h6 class="text-center mb-3"> {{ msg }}</h6>
         <div class="flex-center">
             <ui-base-button mode="main_btn" @click="visible2 = false"> تقييماتي </ui-base-button>
         </div>
     </Dialog>
+    <toast />
 </template>
 <script>
 
@@ -125,6 +126,7 @@ export default {
                 // image: require("@/assets/images/Flag.webp"),
             },
             rates:   [],
+            msg: '',
         }
 
     },
@@ -157,6 +159,8 @@ export default {
     methods:{
         report(id){
             this.commentId = id 
+            // console.log(this.commentId)
+            this.visible = true
         },
         async complaint() {
             this.code = this.selectedCountry.code.replace(/\+/g, '')
@@ -168,20 +172,23 @@ export default {
                 email: this.email,
                 comment_id: this.commentId
             };
-           await  this.axios.post('/complaint', this.formData)
+           await  this.axios.post('/complaint', this.formData , {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            }
+           })
                 .then((response) => {
-
-                    console.log(response.data.key);
                     if (response.data.key == "success") {
-                        console.log('msg: ', response.data.msg)
-                        console.log('msg: ', response.data.data)
                         this.msg = response.data.msg
+                        this.visible2 = true,
+                        this.visible = false
                     } else {
-                        console.log('error');
+                        this.$toast.add({ detail: `${response.data.msg}`, life: 3000 ,severity: 'info' });
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    this.$toast.add({ detail: `${error}`, life: 3000 ,severity: 'info' });
+
                 })
         }
     }

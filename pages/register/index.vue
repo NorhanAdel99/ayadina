@@ -37,7 +37,7 @@
                 <inputs-form-control type="email" id="email" v-model.trim="email"> البريد الالكتروني </inputs-form-control>
                 <inputs-form-control type="password" id="password" v-model.trim="password"> كلمة المرور
                 </inputs-form-control>
-                <inputs-form-control type="password" id="password2" v-model.trim="password2"> تأكيد كلمة المرور
+                <inputs-form-control type="password" id="password2" v-model.trim="password_confirm"> تأكيد كلمة المرور
                 </inputs-form-control>
                 <label for="checkBox" class="d-flex gap-10 align-items-center mb-3">
                     <input type="checkbox" id="checkBox" class="check" hidden>
@@ -79,7 +79,7 @@ export default {
             phone: '',
             email: '',
             password: '',
-            password2: '',
+            password_confirm: '',
             countries: [],
             code: '',
             formData: '',
@@ -104,43 +104,12 @@ export default {
             localStorage.setItem("email", this.email);
             this.code = this.selectedCountry.code.replace(/\+/g, '');
             try {
-                await useAuthStore().signUp({  name: this.name,email: this.email,  phone: this.phone, country_code: this.code, password: this.password});
-               
+                await useAuthStore().signUp({ name: this.name, email: this.email, phone: this.phone, country_code: this.code, password: this.password , password_confirm: this.password_confirm });
+
             } catch (error) {
                 console.error('Login error:', error);
             }
         },
-        // registerForm() {
-        //     localStorage.setItem("email", this.email);
-        //     this.code = this.selectedCountry.code.replace(/\+/g, '');
-        //     this.formData = {
-        //         name: this.name,
-        //         phone: this.phone,
-        //         email: this.email,
-        //         country_code: this.code,
-        //         password: this.password
-        //     }
-
-        //     this.axios.post('/sign-up', this.formData)
-        //         .then((response) => {
-        //             if (response.data.key === 'success') {
-        //                 console.log(response.data)
-        //                 this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
-        //                 setTimeout(function () {
-        //                     useRouter().push({ path: '/register/otp' });
-        //                 }, 3000)
-        //             }else{
-        //                 this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
-
-        //             }
-        //         })
-        //         .catch((err) => {
-        //             setTimeout(function () {
-        //                     useRouter().push({ path: '/' });
-        //                 }, 3000)
-        //             this.$toast.add({ detail: `${err}`, life: 3000 });
-        //         })
-        // }
     }
 
 }

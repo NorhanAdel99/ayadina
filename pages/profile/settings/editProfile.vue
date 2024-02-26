@@ -4,12 +4,13 @@
       <form @submit.prevent="updateProfile" ref="updateProfile">
         <div class="flex-center">
           <InputsImgInput
-            :modelValue="userImg"
-            id="profileImg"
-            @update:modelValue="updateImageUrl"
-            @removeImage="removeImage"
-            :name="updateProfile"
-          />
+          :key="userImg" 
+              :modelValue="user.image"
+              @update:modelValue="updateImageUrl"
+              @removeImage="removeImage"
+              name="image"
+              id="img"
+            />
         </div>
         <inputs-form-control id="name" v-model="name">
           {{ $t("name") }}
@@ -74,7 +75,7 @@ export default {
       localePath: useLocalePath(),
       selectedCity: null,
       selectedRegion: null,
-      userImg: "",
+      userImg: null,
       description: "",
       name: "",
       cities: [],
@@ -128,10 +129,10 @@ export default {
 
   methods: {
     updateImageUrl(newImageUrl) {
-      this.imageUrl = newImageUrl;
+      this.userImg = newImageUrl;
     },
     removeImage() {
-      this.imageUrl = "";
+      this.userImg = "";
     },
 
     selectRegions() {
