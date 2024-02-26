@@ -1,8 +1,8 @@
 <template>
-      <div v-if="loading" class="loader">
-      <!-- Loader content here -->
-      Loading...
-    </div>
+  <div v-if="loading" class="loader">
+    <!-- Loader content here -->
+    Loading...
+  </div>
   <Htm :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
     <Toast />
     <header>
@@ -209,86 +209,94 @@
 import { useAuthStore } from "@/store/authStore";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getMessaging, getToken  , onMessage} from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 export default {
   data() {
     return {
       localePath: useLocalePath(),
       // nuxtApp : useNuxtApp(),
-      loading:false,
+      loading: false,
       axios: useNuxtApp().$axios,
-      nuxtApp:useNuxtApp(),
+      nuxtApp: useNuxtApp(),
       head: useLocaleHead({
         addDirAttribute: true,
         identifierAttribute: "id",
         addSeoAttributes: true,
         lang: "",
         testUTH: null,
-        token:"",
-        count:"",
-        tokenAuth:"",
-        msg:""
-      }),      
+        token: "",
+        count: "",
+        tokenAuth: "",
+        msg: "",
+      }),
     };
   },
   computed: {
-  isAuthenticated() {
-    if (process.client) {
-      // Code specific to the client side
-      return useAuthStore().isAuthenticated;
-    }
-    // Handle SSR or return a default value
-    return false;
-  }
-},
-  mounted() {    
-//     this.nuxtApp.hook('app:mount', () => {
-//   // Hide the loader when the app is mounted
-//   this.loading = false
-//   console.log(useNuxtApp() , "loadibg")  
-// }),
+    isAuthenticated() {
+      if (process.client) {
+        // Code specific to the client side
+        return useAuthStore().isAuthenticated;
+      }
+      // Handle SSR or return a default value
+      return false;
+    },
+  },
+  mounted() {
+    //     this.nuxtApp.hook('app:mount', () => {
+    //   // Hide the loader when the app is mounted
+    //   this.loading = false
+    //   console.log(useNuxtApp() , "loadibg")
+    // }),
     this.user = useAuthStore().user;
     this.token = useAuthStore().token;
     this.CountNotifecation();
     const firebaseConfig = {
-  apiKey: "AIzaSyB1hE97BBWVGZcYcXp_XmIFEWTlaRcQrTo",
-  authDomain: "ayadina-notify.firebaseapp.com",
-  projectId: "ayadina-notify",
-  storageBucket: "ayadina-notify.appspot.com",
-  messagingSenderId: "908007313296",
-  appId: "1:908007313296:web:61d2e7bd9cb8df26c7ed15",
-  measurementId: "G-MKGCM8JMVY"
-};
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging();
-onMessage(messaging, (payload) => {
-  console.log('Message received. ', payload);
- alert("shiii")
-
-});
-getToken(messaging, { vapidKey: 'BEbUS20xwzQNJMEnM_DkJu6-s3aEMWtel40052aw7rQ7ZIzmSI27mydBbPmPGfXzmUP4uM38o-ANUPLH6TXgOOA' }).then((currentToken) => {
-  if (currentToken) {
-    console.log('token' , currentToken)
-  } else {
-    console.log('No registration token available. Request permission to generate one.');
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-});
+      apiKey: "AIzaSyB1hE97BBWVGZcYcXp_XmIFEWTlaRcQrTo",
+      authDomain: "ayadina-notify.firebaseapp.com",
+      projectId: "ayadina-notify",
+      storageBucket: "ayadina-notify.appspot.com",
+      messagingSenderId: "908007313296",
+      appId: "1:908007313296:web:61d2e7bd9cb8df26c7ed15",
+      measurementId: "G-MKGCM8JMVY",
+    };
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging();
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+      alert("shiii");
+    });
+    getToken(messaging, {
+      vapidKey:
+        "BEbUS20xwzQNJMEnM_DkJu6-s3aEMWtel40052aw7rQ7ZIzmSI27mydBbPmPGfXzmUP4uM38o-ANUPLH6TXgOOA",
+    })
+      .then((currentToken) => {
+        if (currentToken) {
+          console.log("token", currentToken);
+        } else {
+          console.log(
+            "No registration token available. Request permission to generate one."
+          );
+        }
+      })
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
+      });
   },
 
   methods: {
-    CountNotifecation(){
-      this.axios.get('/count-notifications' ,{
-            headers: {
+    CountNotifecation() {
+      this.axios
+        .get("/count-notifications", {
+          headers: {
             Authorization: `Bearer ${this.token}`,
           },
-        }).then((res)=>{
-            this.count =res.data.data.count
         })
+        .then((res) => {
+          this.count = res.data.data.count;
+        });
     },
-    signOut(){
-      useAuthStore().signOut()
+    signOut() {
+      useAuthStore().signOut();
     },
     toggleActive(e) {
       let nav = document.querySelector(".project-nav");
@@ -311,12 +319,15 @@ getToken(messaging, { vapidKey: 'BEbUS20xwzQNJMEnM_DkJu6-s3aEMWtel40052aw7rQ7ZIz
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Semi-transparent white background */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999; /* Ensure it's above other elements */
 }
 </style>
-
-
