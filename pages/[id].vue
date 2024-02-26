@@ -13,7 +13,7 @@
             :options="cities"
             optionLabel="name"
             placeholder="select a city"
-            class=" form-control d-flex justify-content-between fixedBox"
+            class="form-control d-flex justify-content-between fixedBox"
             @change="onCityChange"
           />
           <Dropdown
@@ -21,10 +21,15 @@
             :options="regions"
             optionLabel="name"
             placeholder="select a region"
-            class=" form-control d-flex justify-content-between fixedBox "
+            class="form-control d-flex justify-content-between fixedBox"
             @change="onRegionChange"
           />
-          <input type="search" class="form-control fixedBox" v-model="searchProviders"  @input="handleSearch">
+          <input
+            type="search"
+            class="form-control fixedBox"
+            v-model="searchProviders"
+            @input="handleSearch"
+          />
         </div>
       </div>
       <div class="row">
@@ -64,8 +69,8 @@
     </div>
     <div class="col-lg-4">
       <div class="rounded-2 p-2 main_border mb-3">
-        <div class="flex-between border-bottom mb-3 pb-3">
-          <h6 class="title-border">الطلبات الخاصة</h6>
+        <div class="flex-between border-bottom mb-3 py-3">
+          <h5 class="title-border main_color">الطلبات الخاصة</h5>
         </div>
         <div
           v-for="order in mySpecialOrders"
@@ -83,12 +88,75 @@
             </NuxtLink>
           </div>
         </div>
+        <ui-base-button mode="btn main_btn lg mx-auto" @click="visible3 = true">
+          اضافة طلب خاص
+        </ui-base-button>
       </div>
     </div>
   </div>
-  <footer-component></footer-component>
+  <Dialog
+    v-model:visible="visible3"
+    modal
+    header="ابلاغ"
+    :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <form @submit.prevent="createSpecialOrder">
+          <inputs-form-control type="text" :id="name" v-model.trim="title"
+            >عنوان الطلب
+          </inputs-form-control>
+          <inputs-form-control
+            id="text"
+            type="text"
+            textarea
+            v-model.trim="description"
+          >
+            الوصف
+          </inputs-form-control>
+
+          <div class="flex-center mb-3">
+            <ui-base-button
+              icon="pi pi-check"
+              aria-label="Close"
+              class="main_btn"
+            >
+              نشر الطلب
+            </ui-base-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </Dialog>
+  <Dialog
+    v-model:visible="visible4"
+    modal
+    :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <font-awesome-icon
+      icon="fa-regular fa-circle-check"
+      class="modal-exclam-mark mb-3 main_color"
+    />
+    <h6 class="text-center mb-3">تم نشر طلبك بنجاح</h6>
+    <h6 class="text-center mb-3">سيتم التواصل معك من خلال مقدمي الخدمات</h6>
+    <div class="flex-center mb-3">
+      <ui-base-button
+        icon="pi pi-check"
+        aria-label="Close"
+        type="button"
+        class="main_btn"
+        @click="visible4 = false"
+      >
+        رجوع للقسم
+      </ui-base-button>
+    </div>
+  </Dialog>
+  <toast />
 </template>
 <script>
+import { useAuthStore } from "~/store/authStore";
 export default {
   props: ["id"],
   data() {
@@ -100,16 +168,21 @@ export default {
       selectedRegion: null,
       cities: [],
       regions: [],
-      searchProviders: '',
+      searchProviders: "",
       mySpecialOrders: [],
       providers: [],
+      visible3: false,
+      sub_category_id: null,
+      title: "",
+      description: "",
+      token: "",
     };
   },
   async created() {
     await this.axios
       .post("/filter-providers", {
         category_id: useRoute().params.id,
-        search: this.ser
+        search: this.ser,
       })
       .then((response) => {
         if (response.data.key == "success") {
@@ -127,7 +200,10 @@ export default {
         console.log(error);
       });
   },
-  mounted() {
+  
+   mounted() {
+    this.token = useAuthStore().token;
+    console.log(this.token);
     this.axios
       .get("/cities")
       .then((response) => {
@@ -136,16 +212,57 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
-      this.axios.get(`/special-orders/${useRoute().params.id}`)
-      .then((response) =>{
-        this.mySpecialOrders = response.data.data.special_orders
-
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+     this.getSpecialOrders()
   },
   methods: {
+    getSpecialOrders(){
+      this.axios
+      .get(`/special-orders/${useRoute().params.id}`)
+      .then((response) => {
+        this.mySpecialOrders = response.data.data.special_orders;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+     
+    },
+    createSpecialOrder() {
+      const FormData = {
+        category_id: useRoute().params.id,
+        sub_category_id: this.sub_category_id,
+        title: this.title,
+        description: this.description,
+      };
+      this.axios
+        .post("/create-order", FormData, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          this.visible3 = false;
+          // this.visible4 = true
+          if (response.data.key === "unauthenticated") {
+            this.$toast.add({
+              detail: `${response.data.msg}`,
+              life: 3000,
+              severity: "info",
+            });
+          } else {
+            this.getSpecialOrders()
+            this.$toast.add({
+              detail: `${response.data.msg}`,
+              life: 3000,
+              severity: "info",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      
+    },
     selectRegions() {
       this.axios
         .get(`regions/${this.selectedCity.id}`)
@@ -155,16 +272,16 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    
     },
     async selectCategory(id) {
+      this.sub_category_id = id;
       if (this.selectedCity != null) {
         this.fd = {
           category_id: useRoute().params.id,
           sub_category_id: id,
           city_id: this.selectedCity.id,
         };
-      } else if (this.selectedCity !== null && this.selectedRegions !== nul){
+      } else if (this.selectedCity !== null && this.selectedRegions !== nul) {
         this.fd = {
           category_id: useRoute().params.id,
           sub_category_id: id,
@@ -177,13 +294,13 @@ export default {
           sub_category_id: id,
         };
       }
-      if (this.searchProviders.trim() !== '') {
+      if (this.searchProviders.trim() !== "") {
         this.fd.search = this.searchProviders.trim();
       }
       await this.axios
         .post("/filter-providers", this.fd)
         .then((response) => {
-          console.log(response)
+          console.log(response);
           if (response.data.key == "success") {
             this.providers = response.data.data.providers;
             if (this.providers.length == 0) {
@@ -193,7 +310,7 @@ export default {
             }
           } else {
             alert("noData");
-            console.log(response)
+            console.log(response);
           }
         })
         .catch((error) => {
@@ -201,15 +318,15 @@ export default {
         });
     },
     onCityChange() {
-      this.selectCategory(); 
+      this.selectCategory();
       this.selectRegions();
     },
-    onRegionChange(){
+    onRegionChange() {
       this.selectCategory();
     },
-    handleSearch(){
-      this.selectCategory()
-    }
+    handleSearch() {
+      this.selectCategory();
+    },
   },
 };
 </script>
