@@ -18,7 +18,7 @@
                                 <p> {{ rate.created_at }}</p>
                             </div>
                         </div>
-                        <div class="report" label="Show" @click="visible = true">
+                        <div class="report" label="Show" @click="report(rate.id)">
                             <font-awesome-icon icon="fa-solid fa-flag" />
                             <span>ابلاغ</span>
                         </div>
@@ -41,10 +41,10 @@
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <form @submit.prevent="">
+                <form @submit.prevent="complaint">
                     <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name"> الاسم
                         </inputsFormControl>
-                        <inputsFormControl type="email" name="email" id="ownerName" v-model.trim="name"> الايميل
+                        <inputsFormControl type="email" name="email" id="ownerName" v-model.trim="email"> الايميل
                         </inputsFormControl>
                         <div class="form-group">
                             <label class="form-label" id="phone">
@@ -80,8 +80,8 @@
                         </inputsFormControl>
                     
                     <div class="flex-center">
-                        <ui-base-button icon="pi pi-check" aria-label="Close" type="button" class="main_btn"
-                            @click=" visible = false, visible2 = true">
+                        <ui-base-button class="main_btn"
+                            >
                             إرسال</ui-base-button>
                     </div>
                 </form>
@@ -114,7 +114,7 @@ export default {
     data() {
         return {
             axios: useNuxtApp().$axios,
-
+            commentId: null,
             visible: false,
             visible2: false,
             value: null,
@@ -124,57 +124,26 @@ export default {
                 code: "+966",
                 // image: require("@/assets/images/Flag.webp"),
             },
-            rates:   [
-            {
-                "user": {
-                    "id": 1,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Reinhold Kozey"
-                },
-                "created_at": "2023-12-28",
-                "rate": "",
-                "comment": "my ratings 1"
-            },
-            {
-                "user": {
-                    "id": 1,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Reinhold Kozey"
-                },
-                "created_at": "2023-12-12",
-                "rate": "5",
-                "comment": "mu first rating "
-            },
-            {
-                "user": {
-                    "id": 7,
-                    "email": "http://127.0.0.1:8000/storage/images/users/default.png",
-                    "name": "Millie O'Kon I"
-                },
-                "created_at": "2023-12-11",
-                "rate": "5",
-                "comment": "you are good provider"
-            }
-        ],
+            rates:   [],
         }
 
     },
     mounted() {
         this.value = this.rates.map(item => item.rate);
-        // this.token = useAuthStore().user.token
+        this.token = useAuthStore().token
       
-        // this.axios.get('/my-ratings' , {
-        //     headers: {
-        //         Authorization: `Bearer ${this.token}`,
-        //     }
-        // })
-        //     .then((res) => {
-        //         this.rates = res.data.data.data
-        //         console.log(res.data.data.data)
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
+        this.axios.get('/my-ratings' , {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            }
+        })
+            .then((res) => {
+                this.rates = res.data.data.data
+                console.log(res.data.data.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         /////// country-code 
         this.axios.get('/country-code')
             .then((response) => {
@@ -186,18 +155,20 @@ export default {
             })
     },
     methods:{
-        
-        async report() {
+        report(id){
+            this.commentId = id 
+        },
+        async complaint() {
             this.code = this.selectedCountry.code.replace(/\+/g, '')
             this.formData = {
-                name: this.name,
+                user_name: this.name,
                 phone: this.phone,
-                message: this.messege,
+                complaint: this.messege,
                 country_code: this.code,
                 email: this.email,
-                comment_id: ''
+                comment_id: this.commentId
             };
-           await  this.axios.post('/send-contact', this.formData)
+           await  this.axios.post('/complaint', this.formData)
                 .then((response) => {
 
                     console.log(response.data.key);
