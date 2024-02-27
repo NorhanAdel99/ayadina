@@ -72,8 +72,9 @@
     "Restore_password":"استعادة كلمة المرور" ,
     "Back_to_the_section":"رجوع للقسم" ,
     "activation_code":" كود التفعيل ",
-    "Make_sure":"تأكد" ,
-    "Didnot_you_receive_a_code?":"لم يصلك كود ؟"
+    "Make_sure":"تأكيد" ,
+    "Didnot_you_receive_a_code?":"لم يصلك كود ؟" ,
+    "Confirm_the_new_password":" تأكيد كلمة المرور الجديدة"
 
 
 

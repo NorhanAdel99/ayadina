@@ -18,7 +18,6 @@
             />
           
           </div>
-          <!-- <h3> name:   {{ user.name }}</h3> -->
           <div class="flex-center mb-3">
             <ui-base-button mode="main_btn lg"> {{ $t('Make_sure')}} </ui-base-button>
           </div>
@@ -35,9 +34,7 @@
     </div>
   </template>
   <script>
-  import VOtpInput from "vue3-otp-input";
-  import { useAuthStore } from "@/store/authStore";
-  
+  import VOtpInput from "vue3-otp-input";  
   export default {
     components: { VOtpInput },
   
@@ -49,8 +46,6 @@
         code: "",
         formData: "",
         value: "",
-        token: "",
-        user: "",
       };
     },
     mounted() {
@@ -72,6 +67,7 @@
             await this.axios.post('/forget-password-check-code', this.formData)
                 .then((response) => {
                     if (response.data.key == "success") {
+                        localStorage.setItem("codeReset",this.code)
                         this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
                         useRouter().push({ path: '/login/passwordReset' })
 
