@@ -74,7 +74,11 @@
     "activation_code":" كود التفعيل ",
     "Make_sure":"تأكيد" ,
     "Didnot_you_receive_a_code?":"لم يصلك كود ؟" ,
-    "Confirm_the_new_password":" تأكيد كلمة المرور الجديدة"
+    "Confirm_the_new_password":" تأكيد كلمة المرور الجديدة",
+    "Report":"إبلاغ",
+    "Messaging":"مراسلة",
+    "See_previous_works":" رؤية الاعمال السابقة",
+    "Evaluate":"قم بالتقييم "
 
 
 
