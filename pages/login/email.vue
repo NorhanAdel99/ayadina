@@ -3,7 +3,7 @@
         <div class="col-md-5">
             <ui-main-title> {{ $t('Restore_password')}} </ui-main-title>
             <form @submit.prevent="ResetPassword">
-                <inputs-form-control mode="form-control" ref="mail" type="email" id="email" v-model.trim="email"> 
+                <inputs-form-control mode="form-control" ref="mail" type="email" id="email" v-model.trim="email">
                     {{ $t('email')}} 
                 </inputs-form-control>
                 <div class="flex-center mb-3">
