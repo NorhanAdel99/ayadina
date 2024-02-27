@@ -39,7 +39,7 @@
           :key="provider.id"
         >
           <NuxtLink
-            :to="'/providerDetails/' + provider.id"
+            :to="'/provider/' + provider.id"
             class="rounded-2 main_border overflow-auto mb-3 d-block text-dark"
           >
             <img :src="provider.image" alt="" class="providerImg" />
