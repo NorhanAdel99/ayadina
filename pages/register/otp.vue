@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-md-5">
-      <ui-main-title> كود التفعيل </ui-main-title>
+      <ui-main-title>{{ $t('activation_code')}}</ui-main-title>
       <form @submit.prevent="activation">
         <div class="contain-otp flex-center mb-3">
           <v-otp-input
@@ -20,14 +20,14 @@
         </div>
         <!-- <h3> name:   {{ user.name }}</h3> -->
         <div class="flex-center mb-3">
-          <ui-base-button mode="main_btn lg"> تأكد </ui-base-button>
+          <ui-base-button mode="main_btn lg"> {{ $t('Make_sure')}}  </ui-base-button>
         </div>
         <NuxtLink
           class="text-center d-block main_color"
           link
           :to="localePath('/login/otp')"
         >
-          لم يصلك كود ؟
+        {{ $t('Didnot_you_receive_a_code?')}} 
         </NuxtLink>
       </form>
       <Toast />
