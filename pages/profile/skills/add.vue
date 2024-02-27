@@ -21,16 +21,25 @@
             <span class="m-end-5"> القسم الرئيسيي</span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown v-model="selectedCategory" :options="categories" optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between" @change="selectSubCategory" />
+          <Dropdown
+            v-model="selectedCategory"
+            :options="categories"
+            optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between"
+            @change="selectedsubCategory"
+          />
         </div>
         <div class="form-group">
           <label class="form-label">
             <span class="m-end-5"> القسم الفرعي </span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown v-model="selectedsubCategory" :options="subCategories" optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between" @change="selectRegions" />
+          <Dropdown
+            v-model="selectsubCategory"
+            :options="subCategories"
+            optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between"
+          />
         </div>
 
         <inputs-form-control textarea id="descripe" v-model="descriptionAr">
@@ -59,19 +68,8 @@
         </div>
 
         <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
-            <InputsImgInput
-              v-for="(img, index) in imgs"
-              :key="img.id"
-              :index="index"
-              :modelValue="img.image"
-              @update:modelValue="updateImageUrl"
-              @removeImage="removeImage"
-              @change="handleImageUpload"
-              :name="`img${index}`"
-              :id="`img${index}`"
-            />
-        </div>
-
+          <inputs-img-preview-multi  name="images[]" :onRemove="handleImageRemove"  @update:images="handleImageUpdate" />
+</div>
         <div class="flex-center">
           <!-- @click="visible = true" label="Show" -->
           <ui-baseButton class="main_btn lg">
@@ -127,7 +125,7 @@ export default {
       lang: useNuxtApp().$i18n.locale,
       selectedCityIds: [],
       selectedCategory: null,
-      selectedsubCategory: null,
+      selectsubCategory: null,
       subCategories: [],
       categories: [],
       nameAr: "",
@@ -135,7 +133,7 @@ export default {
       descriptionAr: "",
       descriptionEn: "",
       token: "",
-
+images: [],
       img: "",
       img2: "",
       img3: "",
@@ -166,28 +164,38 @@ export default {
         });
   },
   methods: {
-    updateImageUrl(imgName, newImageUrl) {
-      this[imgName] = newImageUrl;
-    },
-    removeImage(imgName) {
-      // Handle removing the image for the specified imgName
-      this[imgName] = "";
+    handleImageUpdate(updatedImages) {
+      // Handle the updated images in the parent component
+      this.images = updatedImages;
     },
 
-    selectSubCategory() {
+    handleImageRemove(index) {
+      // Handle image removal logic here
+      console.log(`Image at index ${index} removed`);
+    },
+ 
+
+    removeImage(index) {
+      // Handle image removal logic
+      console.log(`Removing image at index ${index}`);
+      // this.images.splice(index, 1);
+      // this.selectedSkill.images.splice(index, 1);
+    },
+
+    selectedsubCategory() {
       this.axios
         .get(`sub-categories/${this.selectedCategory.id}`)
         .then((response) => {
           this.subCategories = response.data.data;
-          console.log(this.subCategories)
+          console.log(this.subCategories);
         })
         .catch(function (error) {
           console.log(error);
         });
     },
     selectRegions() {
-      this.selectedRegions = null,
-        this.selectedCityIds = this.selectedCities.map((city) => city.id);
+      (this.selectedRegions = null),
+        (this.selectedCityIds = this.selectedCities.map((city) => city.id));
       this.regions = [];
       for (const cityId of this.selectedCityIds) {
         this.axios
@@ -199,15 +207,13 @@ export default {
             this.regions.push(...regionsForCity);
           })
           .catch((error) => {
-            console.error(
-              `Error fetching regions for city ID ${cityId}:`,
-              error
-            );
-
+            console.error(error);
+            F;
           });
       }
       // Make the API request to fetch regions based on selected cities
     },
+        
     async addSkill() {
   
       const formData = new FormData(this.$refs.addSkill);
@@ -216,7 +222,7 @@ export default {
       formData.append("description[ar]", this.descriptionAr);
       formData.append("description[en]", this.descriptionEn);
       formData.append("category_id", this.selectedCategory.id);
-      formData.append("sub_category_id", this.selectedsubCategory.id);
+      formData.append("sub_category_id", this.selectsubCategory.id);
       
       for (let i = 0; i < this.selectedCities.length; i++) {
     formData.append("city_ids[]", this.selectedCities[i].id);

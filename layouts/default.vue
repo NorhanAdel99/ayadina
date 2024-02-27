@@ -234,19 +234,12 @@ export default {
   computed: {
     isAuthenticated() {
       if (process.client) {
-        // Code specific to the client side
         return useAuthStore().isAuthenticated;
       }
-      // Handle SSR or return a default value
       return false;
     },
   },
   mounted() {
-    //     this.nuxtApp.hook('app:mount', () => {
-    //   // Hide the loader when the app is mounted
-    //   this.loading = false
-    //   console.log(useNuxtApp() , "loadibg")
-    // }),
     this.user = useAuthStore().user;
     this.token = useAuthStore().token;
     this.CountNotifecation();
@@ -311,6 +304,7 @@ export default {
   },
 };
 </script>
+<<<<<<< HEAD
 <style scoped>
 .loader {
   /* Style for loader container */
@@ -326,3 +320,5 @@ export default {
   z-index: 9999; /* Ensure it's above other elements */
 }
 </style>
+=======
+>>>>>>> face1d4a78e6ffdf3179ca76da29f32fa89a5c92

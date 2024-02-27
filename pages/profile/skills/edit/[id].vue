@@ -75,39 +75,10 @@
             class="w-100"
           />
         </div>
-        <!-- -->
-          <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
-        <div v-if="imgs.length != 0 ">
-           
-            <InputsImgInput 
-              v-for="(img, index) in imgs"
-              :key="img.id"
-              :index="index"
-              :modelValue="img.image"
-              @update:modelValue="updateImageUrl"
-              @removeImage="removeImage"
-              @change="handleImageUpload"
-              name="images"
-              :id="`img${index}`"
-            />
         
-       
-          </div>
-          <div v-else>
-          <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
-            <InputsImgInput
-              v-for="i in 5"
-              :key="`defaultImg${i}`"
-              :modelValue="null"
-              :index="i - 1"
-              :id="`img${i}`"
-              name="images"
-              @update:modelValue="updateImageUrl"
-              @removeImage="removeImage"
-            />
-          </div>
-          </div>
-        </div>
+        <inputs-img-preview-multi  name="images[]" :onRemove="handleImageRemove"  @update:images="handleImageUpdate" />
+        
+
 
         <div class="flex-center">
           <ui-base-button
@@ -194,14 +165,17 @@ export default {
   },
 
   methods: {
-    updateImageUrl(newImageUrl) {
-      this.img = newImageUrl;
+    methods: {
+    handleImageUpdate(images) {
+      // Handle updated images
+      this.images = images;
     },
-    removeImage(index) {
-      this.img = "";
-      // this.selectedSkill.images.splice(index, 1);
-      // console.log(this.selectedSkill.images);
+    handleImageRemove(index) {
+      // Handle image removal
+      this.images.splice(index, 1);
     },
+  },
+
     selectedsubCategory() {
       this.axios
         .get(`sub-categories/${this.selectedCategory.id}`)
@@ -253,10 +227,7 @@ export default {
         formData.append("region_ids[]", this.selectedRegions[i].id);
       }
 console.log(this.imgs)
-      // for (let i = 0; i < this.imgs.length; i++) {
-      //   formData.append("images[]", this.imgs[i].name);
-      //   console.log(this.imgs[i].name);
-      // }
+    
 
       console.log(formData);
       await this.axios
@@ -315,8 +286,8 @@ console.log(this.imgs)
         this.selectsubCategory = this.selectedSkill.sub_category;
         this.selectedRegions = this.selectedSkill.regions;
         this.selectedCities = this.selectedSkill.cities;
-        this.imgs = this.selectedSkill.images;
-        console.log(this.imgs);
+        this.images = this.selectedSkill.images;
+        console.log(this.images);
         this.selectedCityIds = this.selectedCities.map((city) => city.id);
         this.regions = [];
         for (const cityId of this.selectedCityIds) {

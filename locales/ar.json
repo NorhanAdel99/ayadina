@@ -68,7 +68,12 @@
     "The_request_has_been_successfully_deleted" :" تم حذف الطلب بنجاح " , 
     "Back_to_order":"رجوع للطلب " ,
     "Notification":"الاشعارات",
-    "no_notification":"لا يوجد اشعارات"
+    "no_notification":"لا يوجد اشعارات" ,
+    "Restore_password":"استعادة كلمة المرور" ,
+    "Back_to_the_section":"رجوع للقسم" ,
+    "activation_code":" كود التفعيل ",
+    "Make_sure":"تأكد" ,
+    "Didnot_you_receive_a_code?":"لم يصلك كود ؟"
 
 
 
