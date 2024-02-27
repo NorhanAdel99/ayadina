@@ -75,7 +75,13 @@
     "Report":"Report",
     "Messaging":"Messaging",
     "See_previous_works":"See previous works",
-    "Evaluate":"Evaluate"
+    "Evaluate":"Evaluate" ,
+    "Add_a_rating":"Add a rating",
+    "Message_Subject":"Message Subject",
+    "send":"send",
+    "Your_report_has_been_received_successfully":"Your report has been received successfully",
+    "addComment":"add your comment",
+    "Your_rating_has_been_sent_Thank_you":"تم إرسال تقييمك شكرا لك "
 
 
 
