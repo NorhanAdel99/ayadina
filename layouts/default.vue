@@ -234,19 +234,12 @@ export default {
   computed: {
     isAuthenticated() {
       if (process.client) {
-        // Code specific to the client side
         return useAuthStore().isAuthenticated;
       }
-      // Handle SSR or return a default value
       return false;
     },
   },
   mounted() {
-    //     this.nuxtApp.hook('app:mount', () => {
-    //   // Hide the loader when the app is mounted
-    //   this.loading = false
-    //   console.log(useNuxtApp() , "loadibg")
-    // }),
     this.user = useAuthStore().user;
     this.token = useAuthStore().token;
     this.CountNotifecation();
@@ -263,7 +256,6 @@ export default {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
       console.log("Message received. ", payload);
-      alert("shiii");
     });
     getToken(messaging, {
       vapidKey:
@@ -311,23 +303,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.loader {
-  /* Style for loader container */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Semi-transparent white background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* Ensure it's above other elements */
-}
-</style>
