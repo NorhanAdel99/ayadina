@@ -20,7 +20,6 @@ export default {
         return {
             localePath: useLocalePath(),
             axios: useNuxtApp().$axios,
-
             email: ''
         }
     },
@@ -32,6 +31,7 @@ export default {
             await this.axios.post('/forget-password-send-code', this.formData)
                 .then((response) => {
                     if (response.data.key == "success") {
+                        localStorage.setItem("emilReset",this.email);
                         this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
                         useRouter().push({ path: '/login/otp' })
 

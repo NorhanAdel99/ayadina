@@ -67,7 +67,10 @@
     "The_request_has_been_successfully_deleted" :"The request has been successfully deleted",
     "Back_to_order":"Back to order" ,
     "Restore_password":"Restore password" ,
-    "Back_to_the_section":"Back to the section"
+    "Back_to_the_section":"Back to the section",
+    "activation_code":"activation code" ,
+    "Make_sure":"Make sure" ,
+    "Didnot_you_receive_a_code?":"Didn't you receive a code?"
 
 
 
