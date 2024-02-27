@@ -65,7 +65,9 @@
     "no":"no"  ,
     "nameofOrder" :"name of order ",
     "The_request_has_been_successfully_deleted" :"The request has been successfully deleted",
-    "Back_to_order":"Back to order"
+    "Back_to_order":"Back to order" ,
+    "Restore_password":"Restore password" ,
+    "Back_to_the_section":"Back to the section"
 
 
 
