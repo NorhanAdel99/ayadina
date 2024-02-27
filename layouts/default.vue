@@ -270,6 +270,7 @@ export default {
           );
         }
       })
+
       .catch((err) => {
         console.log("An error occurred while retrieving token. ", err);
       });
@@ -303,3 +304,21 @@ export default {
   },
 };
 </script>
+<<<<<<< HEAD
+<style scoped>
+.loader {
+  /* Style for loader container */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8); /* Semi-transparent white background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's above other elements */
+}
+</style>
+=======
+>>>>>>> face1d4a78e6ffdf3179ca76da29f32fa89a5c92
