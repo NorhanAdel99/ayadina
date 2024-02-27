@@ -16,14 +16,6 @@
                             </inputs-form-control>
                             <inputs-form-control type="text" id="bankName" v-model="bankName"> اسم بنك الحساب المحول منه
                             </inputs-form-control>
-
-                            <!-- <InputsImgInput
-            :modelValue="userImg"
-            id="profileImg"
-            @update:modelValue="updateImageUrl"
-            @removeImage="removeImage"
-            :name="updateProfile"
-          /> -->
                             <InputsImgInput :modelValue="img" @update:modelValue="updateImageUrl" @removeImage="removeImage"
                                 name="image" id="image" />
                             <div class="flex-center">

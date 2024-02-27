@@ -263,7 +263,6 @@ export default {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
       console.log("Message received. ", payload);
-      alert("shiii");
     });
     getToken(messaging, {
       vapidKey:
@@ -278,6 +277,7 @@ export default {
           );
         }
       })
+
       .catch((err) => {
         console.log("An error occurred while retrieving token. ", err);
       });
@@ -319,12 +319,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Semi-transparent white background */
+  background-color: rgba(255,255,255,0.8); /* Semi-transparent white background */
   display: flex;
   justify-content: center;
   align-items: center;
