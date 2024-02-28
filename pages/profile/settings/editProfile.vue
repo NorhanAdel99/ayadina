@@ -3,13 +3,8 @@
     <div class="col-md-5">
       <form @submit.prevent="updateProfile" ref="updateProfile">
         <div class="flex-center">
-          <InputsImgInput
-            :modelValue="userImg"
-            id="profileImg"
-            @update:modelValue="updateImageUrl"
-            @removeImage="removeImage"
-            :name="updateProfile"
-          />
+          <InputsImgInput :key="userImg" :modelValue="user.image" @update:modelValue="updateImageUrl"
+            @removeImage="removeImage" name="image" id="img" />
         </div>
         <inputs-form-control id="name" v-model="name">
           {{ $t("name") }}
@@ -19,33 +14,19 @@
             <span class="m-end-5"> {{ $t("city") }} </span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown
-            v-model="selectedCity"
-            :options="cities"
-            optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between"
-            @change="selectRegions"
-          />
+          <Dropdown v-model="selectedCity" :options="cities" optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between" @change="selectRegions" />
         </div>
         <div class="form-group">
           <label class="form-label">
             <span class="m-end-5"> {{ $t("Region") }} </span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown
-            v-model="selectedRegion"
-            :options="regions"
-            optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between"
-          />
+          <Dropdown v-model="selectedRegion" :options="regions" optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between" />
         </div>
         <div class="form-group">
-          <inputs-form-control
-            textarea
-            name="descripe"
-            rows="5"
-            v-model="description"
-          >
+          <inputs-form-control textarea name="descripe" rows="5" v-model="description">
             {{ $t("description") }}
           </inputs-form-control>
         </div>
@@ -63,7 +44,9 @@
 <script>
 import MultiSelect from "primevue/multiselect";
 import { useAuthStore } from "@/store/authStore";
-
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
   components: {
     MultiSelect,
@@ -74,7 +57,7 @@ export default {
       localePath: useLocalePath(),
       selectedCity: null,
       selectedRegion: null,
-      userImg: "",
+      userImg: null,
       description: "",
       name: "",
       cities: [],
@@ -128,10 +111,10 @@ export default {
 
   methods: {
     updateImageUrl(newImageUrl) {
-      this.imageUrl = newImageUrl;
+      this.userImg = newImageUrl;
     },
     removeImage() {
-      this.imageUrl = "";
+      this.userImg = "";
     },
 
     selectRegions() {

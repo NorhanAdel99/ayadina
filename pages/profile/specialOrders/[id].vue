@@ -80,7 +80,9 @@
 
 import Dialog from 'primevue/dialog';
 import { useAuthStore } from '@/store/authStore';
-
+definePageMeta({
+  middleware: "check-auth",
+})
 
 export default {
     components: { Dialog },

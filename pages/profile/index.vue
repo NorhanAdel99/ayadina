@@ -156,6 +156,9 @@
 </template>
 
 <script>
+definePageMeta({
+  middleware: "check-auth",
+})
 import Dialog from "primevue/dialog";
 import Toast from "primevue/toast";
 
@@ -179,7 +182,8 @@ export default {
       skillToRemoveId: null,
       // visible: false,
       region: '',
-      city:''
+      city:'',
+      img:''
     };
   },
 
@@ -197,7 +201,10 @@ export default {
           this.user = response.data.data;
           this.city = this.user.city.name;
           this.region = this.user.region.name
+          this.img = this.user.image
           console.log(response)
+
+          console.log(this.img)
         } else {
           this.$toast.add({
             severity: "info",

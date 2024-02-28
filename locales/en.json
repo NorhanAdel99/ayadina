@@ -65,7 +65,23 @@
     "no":"no"  ,
     "nameofOrder" :"name of order ",
     "The_request_has_been_successfully_deleted" :"The request has been successfully deleted",
-    "Back_to_order":"Back to order"
+    "Back_to_order":"Back to order" ,
+    "Restore_password":"Restore password" ,
+    "Back_to_the_section":"Back to the section",
+    "activation_code":"activation code" ,
+    "Make_sure":"Make sure" ,
+    "Didnot_you_receive_a_code?":"Didn't you receive a code?" ,
+    "Confirm_the_new_password":"Confirm the new password",
+    "Report":"Report",
+    "Messaging":"Messaging",
+    "See_previous_works":"See previous works",
+    "Evaluate":"Evaluate" ,
+    "Add_a_rating":"Add a rating",
+    "Message_Subject":"Message Subject",
+    "send":"send",
+    "Your_report_has_been_received_successfully":"Your report has been received successfully",
+    "addComment":"add your comment",
+    "Your_rating_has_been_sent_Thank_you":"تم إرسال تقييمك شكرا لك "
 
 
 

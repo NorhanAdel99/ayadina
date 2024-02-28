@@ -1,38 +1,41 @@
 <template>
-  <ui-main-title> الملف الشخصي </ui-main-title>
-  <profile-tabs></profile-tabs>
-  <div class="row justify-content-center">
-    <div class="col-md-10">
-      <ui-noData v-if="rates.length === 0"> No rates </ui-noData>
-      <ui-base-card v-else>
-        <div
-          v-for="rate in rates"
-          :key="rate.id"
-          class="mb-3 border-bottom mb-3"
-        >
-          <div class="flex-between mb-3">
-            <div class="d-flex gap-10">
-              <img :src="rate.img" class="circleImg" />
-              <div>
-                <h6>{{ rate.user.name }}</h6>
-                <p>{{ rate.created_at }}</p>
-              </div>
-            </div>
-            <div class="report" label="Show" @click="report(rate.id)">
-              <font-awesome-icon icon="fa-solid fa-flag" />
-              <span>ابلاغ</span>
-            </div>
-          </div>
-          <Rating v-model="rate.rate" :cancel="false" class="mb-3" readonly />
+    <ui-main-title>
+        الملف الشخصي
+    </ui-main-title>
+    <profile-tabs></profile-tabs>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <ui-noData v-if="rates.length === 0 ">
+                No rates
+            </ui-noData>
+            <ui-base-card v-else >
+                <div v-for="rate in rates" :key="rate.id" class="mb-3 border-bottom mb-3">
+                    <div class="flex-between mb-3">
+                        <div class="d-flex gap-10">
+                            <img :src="rate.img" class="circleImg">
+                            <div>
+                                <h6>{{ rate.user.name }}</h6>
+                                <p> {{ rate.created_at }}</p>
+                            </div>
+                        </div>
+                        <div class="report" label="Show" @click="report(rate.id)">
+                            <font-awesome-icon icon="fa-solid fa-flag" />
+                            <span>ابلاغ</span>
+                        </div>
+                    </div>
+                    <Rating v-model="rate.rate" :cancel="false" class="mb-3" readonly />
 
-          <!-- rate -->
-          <p class="text-muted">
-            {{ rate.comment }}
-          </p>
+                    <!-- rate -->
+                    <p class="text-muted">
+                        {{ rate.comment }}
+                    </p>
+                </div>
+
+
+            </ui-base-card>
+            
         </div>
-      </ui-base-card>
     </div>
-  </div>
 
   <Dialog
     v-model:visible="visible"
@@ -140,8 +143,14 @@
     </div>
   </Dialog>
 </template>
+
 <script>
-import Dialog from "primevue/dialog";
+definePageMeta({
+  middleware: "check-auth",
+})
+
+import Dialog from 'primevue/dialog';
+
 
 // import Rating from 'primevue/rating';
 import { useAuthStore } from "@/store/authStore";
@@ -150,92 +159,91 @@ export default {
   components: {
     Dialog,
   },
-  data() {
-    return {
-      axios: useNuxtApp().$axios,
-      commentId: "",
-      visible: false,
-      visible2: false,
-      value: null,
-      countries: [],
-      code: "",
-      selectedCountry: {
-        code: "+966",
-        // image: require("@/assets/images/Flag.webp"),
-      },
-      rates: [],
-    };
-  },
-  mounted() {
-    this.value = this.rates.map((item) => item.rate);
-    this.token = useAuthStore().token;
-    console.log(this.token);
-    this.axios
-      .get("/my-ratings", {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
+
+    data() {
+        return {
+            axios: useNuxtApp().$axios,
+            commentId: null,
+            visible: false,
+            visible2: false,
+            value: null,
+            countries: [],
+            code: '',
+            selectedCountry: {
+                code: "+966",
+                // image: require("@/assets/images/Flag.webp"),
+            },
+            rates:   [],
+            msg: '',
+        }
+
+    },
+    mounted() {
+        this.value = this.rates.map(item => item.rate);
+        this.token = useAuthStore().token
+      
+        this.axios.get('/my-ratings' , {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            }
+        })
+            .then((res) => {
+                this.rates = res.data.data.data
+                console.log(res.data.data.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        /////// country-code 
+        this.axios.get('/country-code')
+            .then((response) => {
+                console.log('response: ', response.data.data)
+                this.countries = response.data.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    },
+    methods:{
+        report(id){
+            this.commentId = id 
+            // console.log(this.commentId)
+            this.visible = true
         },
-      })
-      .then((res) => {
-        this.rates = res.data.data.data;
-        console.log(res.data.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    /////// country-code
-    this.axios
-      .get("/country-code")
-      .then((response) => {
-        console.log("response: ", response.data.data);
-        this.countries = response.data.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  },
-  methods: {
-    report(id) {
-      this.commentId = id;
-      this.visible = true;
-      console.log(this.commentId)
-    },
-    async complaint() {
-      this.code = this.selectedCountry.code.replace(/\+/g, "");
-      this.formData = {
-        user_name: this.name,
-        phone: this.phone,
-        complaint: this.messege,
-        country_code: this.code,
-        email: this.email,
-        comment_id: this.commentId,
-      };
-      await this.axios
-        .post("/complaint", this.formData, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          //     if (response.data.key == "success") {
-          //         console.log('msg: ', response.data.msg)
-          //         console.log('msg: ', response.data.data)
-          //         this.msg = response.data.msg
-          //         if(response.data.key === 'success'){
-          //     this.visible = false,
-          //     this.visible2 = true
-          // }
-          //     } else {
-          //         console.log('error');
-          //     }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-  },
-};
+        async complaint() {
+            this.code = this.selectedCountry.code.replace(/\+/g, '')
+            this.formData = {
+                user_name: this.name,
+                phone: this.phone,
+                complaint: this.messege,
+                country_code: this.code,
+                email: this.email,
+                comment_id: this.commentId
+            };
+           await  this.axios.post('/complaint', this.formData , {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            }
+           })
+                .then((response) => {
+                    if (response.data.key == "success") {
+                        this.msg = response.data.msg
+                        this.visible2 = true,
+                        this.visible = false
+                    } else {
+                        this.$toast.add({ detail: `${response.data.msg}`, life: 3000 ,severity: 'info' });
+                    }
+                })
+                .catch(function (error) {
+                    this.$toast.add({ detail: `${error}`, life: 3000 ,severity: 'info' });
+
+                })
+        }
+    }
+
+
+}
+
 </script>
 <style>
 .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon,

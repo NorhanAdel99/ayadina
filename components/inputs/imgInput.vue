@@ -1,5 +1,6 @@
 <template>
-  <div class="position-relative">
+
+  <div class="position-relative" >
     <div v-if="imageUrl" @click="removeImage" class="removeSrc text-danger">
       <font-awesome-icon icon="fa-solid fa-xmark" />
     </div>
@@ -10,12 +11,10 @@
       </span>
       <input type="file" @change="handleFileChange" hidden :id="id" :name="name"/>
     </label>
-
-    <!-- <div v-else>
-        <p>No image selected</p>
-      </div> -->
   </div>
+
 </template>
+
 
 <script>
 export default {
@@ -41,6 +40,10 @@ export default {
       type: String,
       required: true,
     },
+    multiple:{
+      type: Boolean,
+      required: true,
+    }
   },
   emits: ["update:modelValue", "removeImage"],
 
@@ -67,11 +70,6 @@ export default {
         this.$emit("update:modelValue", null);
       }
     },
-    // removeImage() {
-    //   this.imageUrl = null;
-    //   this.$emit("update:modelValue", null);
-    //   this.$emit("removeImage", this.index);
-    // },
     removeImage() {
     this.imageUrl = null;
     this.$emit("update:modelValue", null);

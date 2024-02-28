@@ -23,7 +23,9 @@
 </template>
 <script>
 import { useAuthStore } from '@/store/authStore'
-
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
     data() {
         return {
@@ -63,7 +65,7 @@ export default {
                     headers: { Authorization: `Bearer ${this.token}` }
                 };
                 await this.axios.get('profile', config).then((res) => {
-                    this.isNotify=res.data.data.is_notify;
+                    this.isNotify = res.data.data.is_notify;
                     console.log(res.data.data.is_notify)
 
                 })

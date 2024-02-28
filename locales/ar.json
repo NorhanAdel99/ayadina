@@ -68,7 +68,23 @@
     "The_request_has_been_successfully_deleted" :" تم حذف الطلب بنجاح " , 
     "Back_to_order":"رجوع للطلب " ,
     "Notification":"الاشعارات",
-    "no_notification":"لا يوجد اشعارات"
+    "no_notification":"لا يوجد اشعارات" ,
+    "Restore_password":"استعادة كلمة المرور" ,
+    "Back_to_the_section":"رجوع للقسم" ,
+    "activation_code":" كود التفعيل ",
+    "Make_sure":"تأكيد" ,
+    "Didnot_you_receive_a_code?":"لم يصلك كود ؟" ,
+    "Confirm_the_new_password":" تأكيد كلمة المرور الجديدة",
+    "Report":"إبلاغ",
+    "Messaging":"مراسلة",
+    "See_previous_works":" رؤية الاعمال السابقة",
+    "Evaluate":"قم بالتقييم " , 
+    "Add_a_rating":"إضافة تقييم",
+    "Message_Subject":"موضوع الرسالة",
+    "send":"إرسال",
+    "Your_report_has_been_received_successfully":"تم استقبال بلاغك بنجاح ",
+    "addComment":"أضف تعليقك",
+    "Your_rating_has_been_sent_Thank_you":"تم إرسال تقييمك شكرا لك "
 
 
 

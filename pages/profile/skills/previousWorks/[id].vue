@@ -16,15 +16,15 @@
 </template>
 <script>
 import { useAuthStore } from '@/store/authStore';
-
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
     props: ['id'],
-
     data() {
         return {
             selectedSkill: '',
             selectedSkillId: '',
-
             showSkill: '',
             axios: useNuxtApp().$axios,
             localePath: useLocalePath(),

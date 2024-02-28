@@ -15,14 +15,14 @@ export const useAuthStore = defineStore("auth", {
     };
   },
   actions: {
-    async signIn({ email, phone, password, country_code }) {
+    async signIn({ email, phone, password, country_code , device_id , device_type }) {
       try {
         let loginData = {};
 
         if (email) {
-          loginData = { log: email, password };
+          loginData = { log: email, password ,  device_id , device_type };
         } else if (phone) {
-          loginData = { log: phone, password, country_code: country_code };
+          loginData = { log: phone, password, country_code: country_code ,device_id  , device_type };
         }
 
         const res = await this.axios.post("/sign-in", loginData);
@@ -49,9 +49,9 @@ export const useAuthStore = defineStore("auth", {
         this.toast.errorToast(error);
       }
     },
-    async signUp({ name, email, phone, country_code, password }) {
+    async signUp({ name, email, phone, country_code, password, password_confirm }) {
       this.axios
-        .post("/sign-up", { name, email, phone, country_code, password })
+        .post("/sign-up", { name, email, phone, country_code, password , password_confirm })
         .then((response) => {
           if (response.data.key === "success") {
             this.toast.successToast(response.data.msg);

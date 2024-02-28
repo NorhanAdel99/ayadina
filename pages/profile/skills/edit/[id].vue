@@ -75,41 +75,18 @@
             class="w-100"
           />
         </div>
-        <div v-if="imgs.length != 0">
-          <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
-            <InputsImgInput
-              v-for="(img, index) in imgs"
-              :key="img.id"
-              :index="index"
-              :modelValue="img.image"
-             
-              @update:modelValue="updateImageUrl"
-              @removeImage="removeImage"
-              @change="handleImageUpload"
-              :name="`img${index}`"
-              :id="`img${index}`"
-
-            />
-          </div>
-        </div>
-        <div v-else>
-          <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
-            <InputsImgInput
-              v-for="i in 5"
-              :key="`defaultImg${i}`"
-              :modelValue="null"
-              :index="i - 1"
-              :id="`img${i}`"
-              :name="`img${i}`"
-              @update:modelValue="updateImageUrl"
-              @removeImage="removeImage"
-            />
-          </div>
-        </div>
+        <!-- @update:images="handleImageUpdate"  -->
+        <inputs-img-preview-multi :key="images" :onRemove="handleImageRemove" 
+        :modelValue="images" @update="updateImageUrl" :images="images"/>
 
         <div class="flex-center">
-          <ui-base-button class="main_btn lg" @click="visible = true" label="Show">
-            تعديل مهارة</ui-base-button>
+          <ui-base-button
+            class="main_btn lg"
+            @click="visible = true"
+            label="Show"
+          >
+        حفظ مهارة</ui-base-button
+          >
         </div>
       </form>
     </div>
@@ -141,7 +118,9 @@
 import multiSelect from "../../../components/inputs/multiSelect.vue";
 import Dialog from "primevue/dialog";
 import { useAuthStore } from "@/store/authStore";
-
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
   props: ["id"],
   components: {
@@ -160,19 +139,16 @@ export default {
       selectedCities: null,
       selectedRegions: null,
       images: [],
-      imgs: [],
       cities: [],
       regions: [],
       selectedSkill: "",
-      filePreview: "",
-      fileName: "",
       selectedSkill: "",
       formdata: "",
       cityName: null,
       regionsName: [],
       lang: useNuxtApp().$i18n.locale,
       selectedCityIds: [],
-      selectedCategory: null ,
+      selectedCategory: null,
       selectsubCategory: null,
       subCategories: [],
       categories: [],
@@ -180,27 +156,29 @@ export default {
       nameEn: "",
       descriptionAr: "",
       descriptionEn: "",
-
+// 
       selectedCityIds: null,
-
     };
   },
 
+
   methods: {
     updateImageUrl(newImageUrl) {
-      this.imageUrl = newImageUrl;
+      this.images = newImageUrl;
+      console.log(this.images)
     },
-    removeImage(index) {
-      this.imageUrl = "";
-      this.selectedSkill.images.splice(index, 1);
-      console.log(this.selectedSkill.images)
+
+    handleImageRemove(index) {
+      // Handle image removal logic here
+      console.log(`Image at index ${index} removed`);
     },
+
     selectedsubCategory() {
       this.axios
         .get(`sub-categories/${this.selectedCategory.id}`)
         .then((response) => {
           this.subCategories = response.data.data;
-          console.log(this.subCategories)
+          console.log(this.subCategories);
         })
         .catch(function (error) {
           console.log(error);
@@ -220,21 +198,13 @@ export default {
             this.regions.push(...regionsForCity);
           })
           .catch((error) => {
-            console.error(
-              error
-            );
-            F;
+            console.error(error);
+            
           });
       }
       // Make the API request to fetch regions based on selected cities
     },
     async editSkills() {
-      // `edit-skill/useTouter`
-       // this.selectedRegionsIds = this.selectedRegions.map((region) => region.id);
-      // this.selectedCitiesIds = this.selectedCities.map((city) => city.id);
-      console.log(this.selectedRegions, this.selectedCities)
-      // this.imgsId = this.imgs.map((img) => img.id);
-      // console.log(this.nameAr , this.nameEn , this.descriptionEn , this.descriptionEn , this.selectedCategory.id , this.selectedsubCategory.id , this.selectedRegionsIds);
       const formData = new FormData(this.$refs.editSkill);
 
       // Append other form data fields
@@ -244,40 +214,42 @@ export default {
       formData.append("description[en]", this.descriptionEn);
       formData.append("category_id", this.selectedCategory.id);
       formData.append("sub_category_id", this.selectsubCategory.id);
-      // formData.append("city_ids[]", this.selectedCities.map(city => city.id));
-      // formData.append("region_ids[]", this.selectedRegions.map(region => region.id));
+      // formData.append("images[]", JSON.stringify*);
+
+      for(let img of this.images){
+        formData.append("images[]", img)
+      }
+
+      console.log(this.images);
+     
       for (let i = 0; i < this.selectedCities.length; i++) {
-    formData.append("city_ids[]", this.selectedCities[i].id);
-  }
+        formData.append("city_ids[]", this.selectedCities[i].id);
+      }
 
-  // Append region_ids
-  for (let i = 0; i < this.selectedRegions.length; i++) {
-    formData.append("region_ids[]", this.selectedRegions[i].id);
-  }
-      // formData.append("images", this.img.id);
-      console.log(formData)
+      // Append region_ids
+      for (let i = 0; i < this.selectedRegions.length; i++) {
+        formData.append("region_ids[]", this.selectedRegions[i].id);
+      }
+    
+
+      console.log(formData);
       await this.axios
-        .post(
-          `edit-skill/${useRoute().params.id}`, formData ,
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-
-        )
+        .post(`edit-skill/${useRoute().params.id}`, formData, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
         .then((res) => {
-          if(res.data.msg === success){
-            alert('yes')
+          console.log(res);
+          if (res.data.msg === "success") {
+            alert("yes");
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-
-
-    },
+  },
 
   mounted() {
     this.token = useAuthStore().token;
@@ -291,17 +263,15 @@ export default {
         console.log(error);
       });
 
-
     this.axios
-        .get('/categories')
-        .then((response) => {
-          this.categories = response.data.data.categories;
-        console.log(this.categories)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
+      .get("/categories")
+      .then((response) => {
+        this.categories = response.data.data.categories;
+        console.log(this.categories);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     this.axios
       .get(`skill-details/${useRoute().params.id}`, {
@@ -319,8 +289,8 @@ export default {
         this.selectsubCategory = this.selectedSkill.sub_category;
         this.selectedRegions = this.selectedSkill.regions;
         this.selectedCities = this.selectedSkill.cities;
-        this.imgs = this.selectedSkill.images;
-
+        this.images = this.selectedSkill.images;
+        console.log(this.images);
         this.selectedCityIds = this.selectedCities.map((city) => city.id);
         this.regions = [];
         for (const cityId of this.selectedCityIds) {
@@ -338,23 +308,23 @@ export default {
         }
 
         this.axios
-        .get(`sub-categories/${this.selectedCategory.id}`)
-        .then((response) => {
-          this.subCategories = response.data.data;
-          console.log(this.subCategories)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+          .get(`sub-categories/${this.selectedCategory.id}`)
+          .then((response) => {
+            this.subCategories = response.data.data;
+            console.log(this.subCategories);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       })
       .catch(function (error) {
         console.log(error);
       });
-     console.log(this.selectedSkill.sub_category)
-
+    console.log(this.selectedSkill.sub_category);
   },
 };
 </script>
+
 <style scoped>
 .base-image-input {
   width: 130px;
@@ -362,4 +332,9 @@ export default {
   margin: 0 !important;
 }
 </style>
-Sent 24m ago Write to
+<!-- created() {
+  this.imagePreviews = this.images.map((image, index) => ({
+    url: image.url,
+    name: image.name || `Image ${index + 1}`,
+  }));
+}, -->

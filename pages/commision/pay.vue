@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <ui-base-card>
                 <ui-main-title> برجاء ارفاق صورة الحوالة </ui-main-title>
-                <form>
+                <form ref="payForm" @submit.prevent="payCommission">
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <inputs-form-control type="text" id="ownerName" v-model.trim="name"> اسم صاحب المحل
@@ -16,10 +16,10 @@
                             </inputs-form-control>
                             <inputs-form-control type="text" id="bankName" v-model="bankName"> اسم بنك الحساب المحول منه
                             </inputs-form-control>
-
-                            <inputs-imgInput> صورة التحويل </inputs-imgInput>
+                            <InputsImgInput :modelValue="img" @update:modelValue="updateImageUrl" @removeImage="removeImage"
+                                name="image" id="image" />
                             <div class="flex-center">
-                                <ui-base-button link to="/" class="main_btn lg"> ارسال </ui-base-button>
+                                <ui-base-button class="main_btn lg"> ارسال </ui-base-button>
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,8 @@
     </div>
 </template>
 <script>
-import nuxtStorage from 'nuxt-storage';
+
+import { useAuthStore } from '@/store/authStore';
 export default {
     data() {
         return {
@@ -39,15 +40,37 @@ export default {
             name: '',
             acccountNum: '',
             bankName: '',
+            // axios: useNuxtApp().axios,
+            token: null,
+            // axios: useNuxtApp().axios,
         }
     },
     mounted() {
-        this.userId = nuxtStorage.localStorage.getData('userId')
-        if (!this.userId) {
-            useRouter().push({ path: '/' })
-            console.log('no')
-        } else {
-            console.log('yes')
+        this.token = useAuthStore().token
+
+    },
+    methods: {
+        updateImageUrl(newImageUrl) {
+            this.img = newImageUrl;
+        },
+        removeImage() {
+            this.img = "";
+        },
+        async payCommission() {
+            const fd = new FormData(this.$refs.payForm)
+            fd.append('account_holder_name', this.name)
+            fd.append('bank_name', this.bankName)
+            fd.append('account_number', this.acccountNum)
+            await this.$axios.post('/pay-commission', fd, {
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                },
+            })
+                .then((response) => {
+                    if (response.data.key === 'success') {
+                        this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
+                    }
+                })
         }
     },
 
