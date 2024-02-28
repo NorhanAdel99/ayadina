@@ -68,8 +68,7 @@ export default defineNuxtConfig({
  
   plugins: [
     "./composables/toastServics.js",
-    "./plugins/firebase.js",
-    '~/plugins/checkAuth.js',
+    "./plugins/firebase.js"
     ],
   
 });
