@@ -101,7 +101,9 @@
     <toast />
 </template>
 <script>
-
+definePageMeta({
+  middleware: "check-auth",
+})
 
 import Dialog from 'primevue/dialog';
 

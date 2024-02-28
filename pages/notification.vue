@@ -41,6 +41,9 @@
     <Toast/>
 </template>
 <script>
+definePageMeta({
+  middleware: "check-auth",
+})
 import { useAuthStore } from "@/store/authStore";
 export default {
     data(){

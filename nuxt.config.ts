@@ -1,9 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-// import store from './store/index.js'
 export default defineNuxtConfig({
-  // experimental: {
-  //   renderJsonPayloads: false
-  // },
+  
   devtools: { enabled: true },
   modules: [
     "nuxt-primevue",
@@ -69,10 +65,12 @@ export default defineNuxtConfig({
   primevue: {
     cssLayerOrder: "reset,primevue",
   },
-
+ 
   plugins: [
     "./composables/toastServics.js",
-    "./plugins/firebase.js"
+    "./plugins/firebase.js",
+    '~/plugins/checkAuth.js',
     ],
+  
 });
 

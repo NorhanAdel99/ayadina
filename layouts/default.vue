@@ -24,14 +24,10 @@
           </NuxtLink>
           <!--check for user -->
 
-          <ul
-            class="d-flex align-items-center gap-20 project-nav"
-            v-if="isAuthenticated"
-          >
+          <ul class="d-flex align-items-center gap-20 project-nav" v-if="isAuthenticated">
             <li>
               <NuxtLink :to="localePath('/')" class="main_color">
-                {{ $t("home_title") }}</NuxtLink
-              >
+                {{ $t("home_title") }}</NuxtLink>
             </li>
             <li>
               <NuxtLink :to="localePath('/profile')" class="main_color">{{
@@ -42,10 +38,7 @@
               <lang-switcher></lang-switcher>
             </li>
             <li>
-              <NuxtLink
-                :to="localePath('/notification')"
-                class="notificationBox"
-              >
+              <NuxtLink :to="localePath('/notification')" class="notificationBox">
                 <font-awesome-icon icon="fa-solid fa-bell"></font-awesome-icon>
                 <Badge :value="count" severity="danger" v-if="count > 0">
                 </Badge>
@@ -53,27 +46,19 @@
             </li>
             <li>
               <div @click="signOut" mode=" btn main_btn sm">
-                <font-awesome-icon
-                  :icon="['fas', 'right-from-bracket']"
-                  class="text-danger"
-                />
+                <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-danger" />
               </div>
             </li>
           </ul>
           <!-- check if not -->
-          <ul
-            class="d-flex align-items-center gap-20 project-nav"
-            v-else-if="!isAuthenticated"
-          >
+          <ul class="d-flex align-items-center gap-20 project-nav" v-else-if="!isAuthenticated">
             <li>
               <NuxtLink :to="localePath('/')" class="main_color">
-                {{ $t("home_title") }}</NuxtLink
-              >
+                {{ $t("home_title") }}</NuxtLink>
             </li>
             <li>
               <NuxtLink :to="localePath('/login')" class="main_color">
-                {{ $t("login") }}</NuxtLink
-              >
+                {{ $t("login") }}</NuxtLink>
             </li>
             <li>
               <lang-switcher></lang-switcher>
@@ -122,14 +107,10 @@
                 </li>
                 <li class="mb-2">
                   <NuxtLink :to="localePath('/fqs')" class="text-dark">
-                    {{ $t("fqs") }}</NuxtLink
-                  >
+                    {{ $t("fqs") }}</NuxtLink>
                 </li>
                 <li class="mb-1">
-                  <NuxtLink
-                    :to="localePath('/termsAndConditions')"
-                    class="text-dark"
-                  >
+                  <NuxtLink :to="localePath('/termsAndConditions')" class="text-dark">
                     {{ $t("termsAndConditions") }}
                   </NuxtLink>
                 </li>
@@ -138,10 +119,7 @@
             <div class="col-md-3">
               <h4 class="mb-3">{{ $t("clintServ") }}</h4>
               <a href="mailto:norhanadel@gmail.com" class="text-dark mb-3">
-                <font-awesome-icon
-                  icon="fa-regular fa-envelope"
-                  class="m-end-10"
-                />
+                <font-awesome-icon icon="fa-regular fa-envelope" class="m-end-10" />
                 <span>norhanadel@gmail.com </span>
               </a>
             </div>
@@ -149,47 +127,27 @@
               <h4 class="mb-3">تابعنا علي</h4>
               <ul class="d-flex align-items-center gap-10">
                 <li class="mb-2">
-                  <a
-                    href="https://twitter.com/intent/tweet"
-                    class="footerCircleLink"
-                    target="_blank"
-                  >
+                  <a href="https://twitter.com/intent/tweet" class="footerCircleLink" target="_blank">
                     <font-awesome-icon icon="fa-brands fa-twitter" />
                   </a>
                 </li>
                 <li class="mb-2">
-                  <a
-                    href="https://tiktok.com/"
-                    class="footerCircleLink"
-                    target="_blank"
-                  >
+                  <a href="https://tiktok.com/" class="footerCircleLink" target="_blank">
                     <font-awesome-icon icon="fa-brands fa-tiktok" />
                   </a>
                 </li>
                 <li class="mb-2">
-                  <a
-                    href="https://facebook.com"
-                    class="footerCircleLink"
-                    target="_blank"
-                  >
+                  <a href="https://facebook.com" class="footerCircleLink" target="_blank">
                     <font-awesome-icon icon="fa-brands fa-facebook-f" />
                   </a>
                 </li>
                 <li class="mb-2">
-                  <a
-                    href="/https://instagram.com"
-                    class="footerCircleLink"
-                    target="_blank"
-                  >
+                  <a href="/https://instagram.com" class="footerCircleLink" target="_blank">
                     <font-awesome-icon icon="fa-brands fa-instagram" />
                   </a>
                 </li>
                 <li class="mb-2">
-                  <a
-                    href="https://snapchat.com"
-                    class="footerCircleLink"
-                    target="_blank"
-                  >
+                  <a href="https://snapchat.com" class="footerCircleLink" target="_blank">
                     <font-awesome-icon icon="fa-brands fa-snapchat" />
                   </a>
                 </li>
@@ -210,6 +168,7 @@ import { useAuthStore } from "@/store/authStore";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+
 export default {
   data() {
     return {
@@ -303,8 +262,9 @@ export default {
     },
   },
 };
+
 </script>
-<<<<<<< HEAD
+
 <style scoped>
 .loader {
   /* Style for loader container */
@@ -313,12 +273,12 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255,255,255,0.8); /* Semi-transparent white background */
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Semi-transparent white background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure it's above other elements */
+  z-index: 9999;
+  /* Ensure it's above other elements */
 }
 </style>
-=======
->>>>>>> face1d4a78e6ffdf3179ca76da29f32fa89a5c92

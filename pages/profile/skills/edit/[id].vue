@@ -75,18 +75,15 @@
             class="w-100"
           />
         </div>
-        
-        <inputs-img-preview-multi  name="images[]" :onRemove="handleImageRemove"  @update:images="handleImageUpdate" />
-        
-
-
+        <inputs-imgPreviewMulti :images="images" :updateImages="handleImageUpdate" />
+  
         <div class="flex-center">
           <ui-base-button
             class="main_btn lg"
             @click="visible = true"
             label="Show"
           >
-            تعديل مهارة</ui-base-button
+        حفظ مهارة</ui-base-button
           >
         </div>
       </form>
@@ -119,7 +116,9 @@
 import multiSelect from "../../../components/inputs/multiSelect.vue";
 import Dialog from "primevue/dialog";
 import { useAuthStore } from "@/store/authStore";
-
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
   props: ["id"],
   components: {
@@ -138,13 +137,9 @@ export default {
       selectedCities: null,
       selectedRegions: null,
       images: [],
-      imgs: [],
-      img: '',
       cities: [],
       regions: [],
       selectedSkill: "",
-      filePreview: "",
-      fileName: "",
       selectedSkill: "",
       formdata: "",
       cityName: null,
@@ -164,17 +159,11 @@ export default {
     };
   },
 
+
   methods: {
-    methods: {
-    handleImageUpdate(images) {
-      // Handle updated images
-      this.images = images;
+    handleImageUpdate(updatedImages) {
+      this.images = updatedImages;
     },
-    handleImageRemove(index) {
-      // Handle image removal
-      this.images.splice(index, 1);
-    },
-  },
 
     selectedsubCategory() {
       this.axios
@@ -202,7 +191,7 @@ export default {
           })
           .catch((error) => {
             console.error(error);
-            F;
+            
           });
       }
       // Make the API request to fetch regions based on selected cities
@@ -226,7 +215,6 @@ export default {
       for (let i = 0; i < this.selectedRegions.length; i++) {
         formData.append("region_ids[]", this.selectedRegions[i].id);
       }
-console.log(this.imgs)
     
 
       console.log(formData);
@@ -321,6 +309,7 @@ console.log(this.imgs)
   },
 };
 </script>
+
 <style scoped>
 .base-image-input {
   width: 130px;
@@ -328,4 +317,9 @@ console.log(this.imgs)
   margin: 0 !important;
 }
 </style>
-Sent 24m ago Write to
+<!-- created() {
+  this.imagePreviews = this.images.map((image, index) => ({
+    url: image.url,
+    name: image.name || `Image ${index + 1}`,
+  }));
+}, -->

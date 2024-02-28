@@ -11,10 +11,6 @@
       </span>
       <input type="file" @change="handleFileChange" hidden :id="id" :name="name"/>
     </label>
-
-    <!-- <div v-else>
-        <p>No image selected</p>
-      </div> -->
   </div>
 
 </template>

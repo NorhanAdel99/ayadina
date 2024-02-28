@@ -53,6 +53,9 @@
 </template>
 
 <script>
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
     data() {
         return {

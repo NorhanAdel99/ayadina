@@ -29,7 +29,9 @@
   </template>
   <script>
   import { useAuthStore } from '@/store/authStore'
-  
+  definePageMeta({
+  middleware: "check-auth",
+})
   export default {
     data() {
         return {

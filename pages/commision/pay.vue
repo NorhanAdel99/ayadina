@@ -29,6 +29,7 @@
     </div>
 </template>
 <script>
+
 import { useAuthStore } from '@/store/authStore';
 export default {
     data() {

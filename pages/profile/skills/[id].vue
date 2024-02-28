@@ -55,12 +55,13 @@
 </template>
 <script>
 import { useAuthStore } from '@/store/authStore';
- 
+definePageMeta({
+  middleware: "check-auth",
+})
 export default {
     async fetch({ route }) {
     const id = route.params.id
     console.log(id) // Output: ID value from the URL
-
   },
     props: ['id'],
     data() {
