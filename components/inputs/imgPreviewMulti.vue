@@ -33,14 +33,7 @@ export default {
     };
 
   },
-  created() {
-  // Fetch the images from your API
-  // Assuming you have the images array available in your component
-  this.images = this.images.map((image) => ({
-    url: image.image,
-    name: `Image ${image.id}`,
-  }));
-},
+
   methods: {
     handleImageUpload() {
       const input = this.$refs.imageInput;
