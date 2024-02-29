@@ -1,25 +1,19 @@
-
 <template>
-  
   <div>
     <label for="imageUpload">Select Multiple Images:</label>
     <input type="file" id="imageUpload" ref="imageInput" :name="name" multiple accept="image/*" @change="handleImageUpload">
 
     <div id="previewContainer">
-
-      <div v-for="(preview, index) in imagePreviews" :key="index" class="image-preview">
-        <img :src="preview.url" class="preview-image" />
-        <input v-model="preview.name" placeholder="Image Name" />
+      <div v-for="(image, index) in imagesArray" :key="index" class="image-preview">
+        <img :src="image.image" class="preview-image" />
+      
         <button @click="removeImage(index)">Remove</button>
       </div>
-   
     </div>
   </div>
-
 </template>
 
 <script>
-
 export default {
   props: {
     images: Array,
@@ -29,41 +23,43 @@ export default {
   },
   data() {
     return {
-      imagePreviews: [],
+      imagesArray:[], // Initialize with a copy of the prop
+      myImgs: [],
     };
-
   },
-
+  mounted(){
+    this.imagesArray = this.images;
+    this.myImgs = this.images;
+  },
   methods: {
     handleImageUpload() {
-  const input = this.$refs.imageInput;
-  const files = input.files;
+      const input = this.$refs.imageInput;
+      const files = input.files;
 
-  // Display preview for each selected image
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const reader = new FileReader();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        this.myImgs.push(file);
 
-    reader.onload = (e) => {
-      this.imagePreviews.push({
-        url: e.target.result,
-        name: `Image ${this.imagePreviews.length + 1}`, // Default name, you can customize it
-      });
+        reader.onload = (e) => {
+          this.imagesArray.push({
+            image: e.target.result,
+            name: `Image ${this.imagesArray.length + 1}`,
+          });
+          // this.imagesArray.push(...this.images)
+     
+          // Emit a custom event with the updated images array
+          this.$emit("update", this.myImgs);
+          // this.$emit("updateMyImgs", this.myImgs);
+        };
 
-      // Emit a custom event with the updated images array
-      this.$emit('update:images', this.imagePreviews);
-    };
-
-    reader.readAsDataURL(file);
-  }
-},
-  
-
+        reader.readAsDataURL(file);
+      }
+    },
     removeImage(index) {
-      this.imagePreviews.splice(index, 1);
+      this.imagesArray.splice(index, 1);
       // Emit a custom event with the updated images array after removal
-      this.$emit('update:images', this.imagePreviews);
-      
+      this.$emit("update", this.imagesArray);
     },
   },
 };
@@ -82,5 +78,4 @@ export default {
   max-height: 100px;
   margin-right: 10px;
 }
-</style> 
-
+</style>

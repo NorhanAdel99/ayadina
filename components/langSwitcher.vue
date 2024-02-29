@@ -1,5 +1,4 @@
-
-<template>
+<!-- <template>
   <ul v-for="locale in availableLocales" :key="locale.code">
     <li>
       <NuxtLink :to="switchLocalePath(locale.code)">
@@ -21,4 +20,4 @@ const availableLocales = computed(() => {
 
 
 
-<style scoped></style>
+<style scoped></style> -->

@@ -4,6 +4,7 @@ import { useAuthStore } from "~/store/authStore";
 
 const isAuthintcated = useAuthStore().isAuthenticated;
 export default defineNuxtRouteMiddleware((to, from) => {
+    if(process.server) return ;
 if(to.path === '/commision' && !isAuthintcated){
     return navigateTo('/')
     // return abortNavigation("You must logged in ");

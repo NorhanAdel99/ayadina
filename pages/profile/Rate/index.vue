@@ -39,6 +39,7 @@
         </div>
     </div>
 
+
     <Dialog v-model:visible="visible" modal :header="$t('Report')" :style="{ width: '50rem' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
         <div class="row justify-content-center">
@@ -90,8 +91,22 @@
 
                             </ui-base-button>
                     </div>
-                </form>
-
+                    <span v-else>
+                      {{ slotProps.placeholder }}
+                    </span>
+                  </template>
+                  <template #option="slotProps">
+                    <div class="flex-group-me">
+                      <img
+                        :alt="slotProps.option.code"
+                        :src="slotProps.option.image"
+                        width="20rem"
+                      />
+                      <div>{{ slotProps.option.code }}</div>
+                    </div>
+                  </template>
+                </Dropdown>
+              </div>
             </div>
         </div>
     </Dialog>
@@ -105,19 +120,23 @@
         </div>
     </Dialog>
     <toast />
+
 </template>
+
 <script>
 definePageMeta({
     middleware: "check-auth",
 })
 
 import Dialog from 'primevue/dialog';
+
 import { useAuthStore } from '@/store/authStore';
 
 export default {
-    components: {
-        Dialog,
-    },
+  components: {
+    Dialog,
+  },
+
     data() {
         return {
             axios: useNuxtApp().$axios,
@@ -201,6 +220,7 @@ export default {
 
 
 }
+
 </script>
 <style >
 .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon,

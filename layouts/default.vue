@@ -7,67 +7,67 @@
           <div class="d-flex gap-20 align-items-end order-md-2-n">
             <img src="../assets/imgs/logo2.png" alt="" class="logotext" />
 
-            <h4 class="headerTitle">{{ $t("passion") }}</h4>
+<h4 class="headerTitle">{{ $t("passion") }}</h4>
 
-            <div class="main_menu burger-icon wh-color" @click="toggleActive">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-          <NuxtLink :to="localePath('/')" class="containLogo">
-            <img src="../assets/imgs/logo1.png" alt="logo" class="logo" />
-          </NuxtLink>
-          <!--check for user -->
+<div class="main_menu burger-icon wh-color" @click="toggleActive">
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<NuxtLink :to="localePath('/')" class="containLogo">
+<img src="../assets/imgs/logo1.png" alt="logo" class="logo" />
+</NuxtLink>
+<!--check for user -->
 
-          <ul class="d-flex align-items-center gap-20 project-nav" v-if="isAuthenticated">
-            <li>
-              <NuxtLink :to="localePath('/')" class="main_color">
-                {{ $t("home_title") }}</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink :to="localePath('/profile')" class="main_color">{{
-                $t("personalFile")
-              }}</NuxtLink>
-            </li>
-            <li>
-              <lang-switcher></lang-switcher>
-            </li>
-            <li>
-              <NuxtLink :to="localePath('/notification')" class="notificationBox">
-                <font-awesome-icon icon="fa-solid fa-bell"></font-awesome-icon>
-                <Badge :value="count" severity="danger" v-if="count > 0">
-                </Badge>
-              </NuxtLink>
-            </li>
-            <li>
-              <div @click="signOut" mode=" btn main_btn sm">
-                <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-danger" />
-              </div>
-            </li>
-          </ul>
-          <!-- check if not -->
-          <ul class="d-flex align-items-center gap-20 project-nav" v-else-if="!isAuthenticated">
-            <li>
-              <NuxtLink :to="localePath('/')" class="main_color">
-                {{ $t("home_title") }}</NuxtLink>
-            </li>
-            <li>
-              <NuxtLink :to="localePath('/login')" class="main_color">
-                {{ $t("login") }}</NuxtLink>
-            </li>
-            <li>
-              <lang-switcher></lang-switcher>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </header>
-    <div class="container">
-      <div class="s-space">
-        <NuxtPage />
-      </div>
-    </div>
+<ul class="d-flex align-items-center gap-20 project-nav" v-if="isAuthenticated">
+<li>
+<NuxtLink :to="localePath('/')" class="main_color">
+{{ $t("home_title") }}</NuxtLink>
+</li>
+<li>
+<NuxtLink :to="localePath('/profile')" class="main_color">{{
+$t("personalFile")
+}}</NuxtLink>
+</li>
+<li>
+<!-- <lang-switcher></lang-switcher> -->
+</li>
+<li>
+<NuxtLink :to="localePath('/notification')" class="notificationBox">
+<font-awesome-icon icon="fa-solid fa-bell"></font-awesome-icon>
+<Badge :value="count" severity="danger" v-if="count > 0">
+</Badge>
+</NuxtLink>
+</li>
+<li>
+<div @click="signOut" mode=" btn main_btn sm">
+<font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-danger" />
+</div>
+</li>
+</ul>
+<!-- check if not -->
+<ul class="d-flex align-items-center gap-20 project-nav" v-else-if="!isAuthenticated">
+<li>
+<NuxtLink :to="localePath('/')" class="main_color">
+{{ $t("home_title") }}</NuxtLink>
+</li>
+<li>
+<NuxtLink :to="localePath('/login')" class="main_color">
+{{ $t("login") }}</NuxtLink>
+</li>
+<li>
+<!-- <lang-switcher></lang-switcher> -->
+</li>
+</ul>
+</div>
+</div>
+</header>
+<div class="container">
+<div class="s-space">
+<NuxtPage />
+</div>
+</div>
 
     <footer>
       <div class="footer-content py-5">
@@ -157,6 +157,7 @@
       </div>
     </footer>
   </div>
+
 </template>
 
 <script>
@@ -225,42 +226,42 @@ export default {
           );
         }
       })
+]
 
-      .catch((err) => {
-        console.log("An error occurred while retrieving token. ", err);
-      });
-  },
+.catch((err) => {
+console.log("An error occurred while retrieving token. ", err);
+});
+},
 
-  methods: {
-    CountNotifecation() {
-      this.axios
-        .get("/count-notifications", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((res) => {
-          this.count = res.data.data.count;
-        });
-    },
-    signOut() {
-      useAuthStore().signOut();
-    },
-    toggleActive(e) {
-      let nav = document.querySelector(".project-nav");
-      let burgerIcon = document.querySelector(".burger-icon");
-      nav.classList.toggle("active");
-      burgerIcon.classList.toggle("active");
-      e.stopPropagation();
-    },
-    stopPropagation(e) {
-      e.stopPropagation();
-    },
-  },
+methods: {
+CountNotifecation() {
+this.axios
+.get("/count-notifications", {
+headers: {
+Authorization: `Bearer ${this.token}`,
+},
+})
+.then((res) => {
+this.count = res.data.data.count;
+});
+},
+signOut() {
+useAuthStore().signOut();
+},
+toggleActive(e) {
+let nav = document.querySelector(".project-nav");
+let burgerIcon = document.querySelector(".burger-icon");
+nav.classList.toggle("active");
+burgerIcon.classList.toggle("active");
+e.stopPropagation();
+},
+stopPropagation(e) {
+e.stopPropagation();
+},
+},
 };
 
 </script>
-
 <style lang="scss" >
 @media (max-width:768px) {
   .headerTitle {
@@ -290,5 +291,5 @@ export default {
       width: 60px;
     }
   }
-}
+
 </style>

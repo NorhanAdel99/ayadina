@@ -8,8 +8,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     headers: {
       common: {
-        lang: useNuxtApp().$i18n.defaultLocale,
+        "Accept-Language": useNuxtApp().$i18n.defaultLocale,
       },
+     
     },
   });
 
