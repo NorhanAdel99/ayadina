@@ -1,11 +1,6 @@
 <template>
   <ui-main-title> إضافة مهارة </ui-main-title>
-  <ul>
-    <li v-for="n in name" :key="n.id">
-      <p>v-if English: {{ n.en }}</p>
-      <p>Arabic: {{ n.ar }}</p>
-    </li>
-  </ul>
+ 
   <div class="row justify-content-center">
     <div class="col-md-10">
       <form @submit.prevent="addSkill" enctype="multipart/form-data" ref="addSkill">

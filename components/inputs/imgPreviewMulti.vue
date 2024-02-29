@@ -24,11 +24,12 @@ export default {
   data() {
     return {
       imagesArray:[], // Initialize with a copy of the prop
-      
+      myImgs: [],
     };
   },
   mounted(){
-    this.imagesArray = this.images
+    this.imagesArray = this.images;
+    this.myImgs = this.images;
   },
   methods: {
     handleImageUpload() {
@@ -38,6 +39,7 @@ export default {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
+        this.myImgs.push(file);
 
         reader.onload = (e) => {
           this.imagesArray.push({
@@ -47,8 +49,8 @@ export default {
           // this.imagesArray.push(...this.images)
      
           // Emit a custom event with the updated images array
-          this.$emit("update", this.imagesArray);
-          console.log(this.imagesArray)
+          this.$emit("update", this.myImgs);
+          // this.$emit("updateMyImgs", this.myImgs);
         };
 
         reader.readAsDataURL(file);

@@ -10,14 +10,21 @@
           <div class="chatContainer">
             <div class="row">
               <div class="col-md-7">
-                <div class="d-flex gap-2 align-items-center mb-3 sender" v-for="message in messages" :key="message.id">
+                <div
+                  class="d-flex gap-2 align-items-center mb-3 sender"
+                  v-for="message in messages"
+                  :key="message.id"
+                >
                   <img src="@/assets/imgs/G2.png" a alt="" class="userImgc" />
                   <div class="containMessege">
-
                     <div class="messege" v-if="message.type === 'text'">
                       {{ message.content }}
                     </div>
-                    <img v-if="message.image" :src="message.image" alt="Sent Image">
+                    <img
+                      v-if="message.image"
+                      :src="message.image"
+                      alt="Sent Image"
+                    />
                     <!-- <img :src="message.content" alt="Image" /> -->
                   </div>
                 </div>
@@ -26,7 +33,7 @@
             <div class="row justify-content-end">
               <div class="col-md-7">
                 <div class="d-flex gap-2 align-items-center mb-3 reciever">
-                  <div class="containMessege ">
+                  <div class="containMessege">
                     messege
                     <div class="messege"></div>
                   </div>
@@ -35,16 +42,33 @@
               </div>
             </div>
           </div>
-          <div class="inputContainer p-2">
-            <input ref="fileInput" type="file" @change="handleFileUpload" accept="image/*" />
-            <textarea v-model="inputMessage" placeholder="Type your message"></textarea>
+            <form ref="chatForm" @submit.prevent="sendMessage">
+          <div class="inputContainer p-2"> 
+              <label :for="id" class="base-image-input">
+                <img v-if="imageUrl" :src="imageUrl" alt="Image Preview"  />
+                <span v-if="!imageUrl" class="select">
+                  <font-awesome-icon icon="fa-solid fa-upload" />
+                </span>
+                <input  ref="fileInput" type="file" @change="handleFileChange" hidden :id="id" :name="name"   accept="image/*"/>
+             </label>
+   
+            <textarea
+              v-model="inputMessage"
+              placeholder="Type your message"
+            ></textarea>
 
             <!-- <input type="text" class="flex-grow" placeholder="اكتب رسالتك.." v-model="messageText" @keyup.enter="sendMessage" /> -->
             <ui-base-button mode="sendMsg main_btn sm" @click="sendMessage">
-              <font-awesome-icon :icon="['fas', 'paper-plane']" class="iconSend" />
+              <font-awesome-icon
+                :icon="['fas', 'paper-plane']"
+                class="iconSend"
+              />
               <span class="send"> ارسال </span>
             </ui-base-button>
+          
+            
           </div>
+        </form>
         </ui-base-card>
       </div>
     </div>
@@ -59,84 +83,89 @@ export default {
       selectedFile: null,
       messages: [],
       imagePreview: null,
-      inputMessage: ''
-
+      inputMessage: "",
+      imageUrl: '',
     };
   },
-  // mounted() {
-  //   this.socket = io('http://localhost:3000'); /
-  //   this.socket.on('chat message', (message) => {
-  //     this.messages.push(message);
-  //   });
-  // },
-  // beforeUnmount() {
-  //   if (this.socket) {
-  //     this.socket.disconnect();
-  //   }
-  // },
+  mounted(){
+    console.log(this.messages)
+  },
+
   methods: {
-  sendMessage() {
-    if (this.inputMessage.trim() !== '' || this.selectedFile) {
-      const message = { id: Date.now() };
+    sendMessage() {
+      if (this.inputMessage.trim() !== "" || this.selectedFile) {
+        const message = { id: Date.now() };
 
-      if (this.inputMessage.trim() !== '') {
-        message.type = 'text';
-        message.content = this.inputMessage;
+        if (this.inputMessage.trim() !== "") {
+          message.type = "text";
+          message.content = this.inputMessage;
+    console.log(this.messages)
+
+        }
+
+        if (this.selectedFile) {
+         
+          const formData = new FormData(this.$refs.chatForm);
+          formData.append("image", this.selectedFile);
+
+          this.$axios
+            .post("/", formData)
+            .then((response) => {
+              message.type = "image";
+              message.content = response.data.imageUrl;
+              this.messages.push(message);
+              this.inputMessage = "";
+              this.selectedFile = null;
+              // Scroll to bottom after adding the message
+              this.scrollToBottom();
+              // Emit the message to the server
+              // this.socket.emit('chat message', message);
+            })
+            .catch((error) => {
+              console.error("Error uploading image:", error);
+            });
+        } else {
+          this.messages.push(message);
+          this.inputMessage = "";
+          // Scroll to bottom after adding the message
+          this.scrollToBottom();
+          // Emit the message to the server
+          // this.socket.emit('chat message', message);
+        }
       }
-
+    },
+  
+    handleFileChange(event) {
+      this.selectedFile = event.target.files?.[0];
       if (this.selectedFile) {
-        // Handle file upload logic here
-        // You can use libraries like axios to send the file to the server
-        // Example:
-        const formData = new FormData();
-        formData.append('image', this.selectedFile);
-
-        this.$axios.post('/upload', formData)
-          .then(response => {
-            message.type = 'image';
-            message.content = response.data.imageUrl;
-            this.messages.push(message);
-            this.inputMessage = '';
-            this.selectedFile = null;
-            // Scroll to bottom after adding the message
-            this.scrollToBottom();
-            // Emit the message to the server
-            // this.socket.emit('chat message', message); 
-          })
-          .catch(error => {
-            console.error('Error uploading image:', error);
-          });
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imageUrl = reader.result;
+          this.$emit("update:modelValue", reader.result);
+        };
+        reader.readAsDataURL(this.selectedFile);
       } else {
-        this.messages.push(message);
-        this.inputMessage = '';
-        // Scroll to bottom after adding the message
-        this.scrollToBottom();
-        // Emit the message to the server
-        // this.socket.emit('chat message', message); 
+        this.imageUrl = null;
+        this.$emit("update:modelValue", null);
       }
-    }
+    },
+    openFileInput() {
+      this.$refs.fileInput.click();
+    },
+    scrollToBottom() {
+      const container = this.$refs.chatContainer;
+      container.scrollTop = container.scrollHeight;
+      const bottomSpace = 50; // Desired bottom space
+      container.scrollTop =
+        container.scrollHeight - container.clientHeight - bottomSpace;
+      console.log("ss");
+    },
   },
-  handleFileUpload(event) {
-    this.selectedFile = event.target.files[0];
-  },
-  openFileInput() {
-    this.$refs.fileInput.click();
-  },
-  scrollToBottom() {
-    const container = this.$refs.chatContainer;
-    container.scrollTop = container.scrollHeight;
-    const bottomSpace = 50; // Desired bottom space
-    container.scrollTop = container.scrollHeight - container.clientHeight  - bottomSpace;
-    console.log('ss')
-  }
-}
-
-}
+};
 </script>
 
-<style scoped lang="scss" >
+<style scoped lang="scss">
 .chatCard {
-
   position: relative;
 }
 
@@ -224,7 +253,6 @@ textarea {
   }
 
   .send {
-
     @media (max-width: 768px) {
       display: none;
     }
@@ -242,5 +270,5 @@ textarea {
 
 .recieve {
   text-align: end;
-}</style> 
-  
+}
+</style>

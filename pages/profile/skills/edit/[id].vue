@@ -2,6 +2,7 @@
   <ui-main-title> تعديل مهارة </ui-main-title>
   <div class="row justify-content-center">
     <div class="col-md-10">
+      <toast />
       <form
         @submit.prevent="editSkills"
         enctype="multipart/form-data"
@@ -76,16 +77,17 @@
           />
         </div>
         <!-- @update:images="handleImageUpdate"  -->
-        <inputs-img-preview-multi :key="images" :onRemove="handleImageRemove" 
-        :modelValue="images" @update="updateImageUrl" :images="images"/>
+        <inputs-img-preview-multi
+          :key="images"
+          :onRemove="handleImageRemove"
+          :modelValue="images"
+          @update="updateImageUrl"
+          :images="images"
+        />
 
         <div class="flex-center">
-          <ui-base-button
-            class="main_btn lg"
-            @click="visible = true"
-            label="Show"
-          >
-        حفظ مهارة</ui-base-button
+          <ui-base-button class="main_btn lg" label="Show">
+            حفظ مهارة</ui-base-button
           >
         </div>
       </form>
@@ -120,7 +122,7 @@ import Dialog from "primevue/dialog";
 import { useAuthStore } from "@/store/authStore";
 definePageMeta({
   middleware: "check-auth",
-})
+});
 export default {
   props: ["id"],
   components: {
@@ -156,17 +158,19 @@ export default {
       nameEn: "",
       descriptionAr: "",
       descriptionEn: "",
-// 
+      //
       selectedCityIds: null,
     };
   },
 
-
   methods: {
     updateImageUrl(newImageUrl) {
       this.images = newImageUrl;
-      console.log(this.images)
+      console.log(this.images);
     },
+    // updateMyImgsF(newImageUrl) {
+    //   this.images = newImageUrl;
+    // },
 
     handleImageRemove(index) {
       // Handle image removal logic here
@@ -199,7 +203,6 @@ export default {
           })
           .catch((error) => {
             console.error(error);
-            
           });
       }
       // Make the API request to fetch regions based on selected cities
@@ -214,14 +217,11 @@ export default {
       formData.append("description[en]", this.descriptionEn);
       formData.append("category_id", this.selectedCategory.id);
       formData.append("sub_category_id", this.selectsubCategory.id);
-      // formData.append("images[]", JSON.stringify*);
 
-      for(let img of this.images){
-        formData.append("images[]", img)
+      for (let i = 0; i < this.images.length; i++) {
+        formData.append("images[]", this.images[i]);
       }
 
-      console.log(this.images);
-     
       for (let i = 0; i < this.selectedCities.length; i++) {
         formData.append("city_ids[]", this.selectedCities[i].id);
       }
@@ -230,19 +230,28 @@ export default {
       for (let i = 0; i < this.selectedRegions.length; i++) {
         formData.append("region_ids[]", this.selectedRegions[i].id);
       }
-    
 
-      console.log(formData);
       await this.axios
         .post(`edit-skill/${useRoute().params.id}`, formData, {
           headers: {
             Authorization: `Bearer ${this.token}`,
+            'Content-Type' : 'image/*'
           },
         })
         .then((res) => {
-          console.log(res);
-          if (res.data.msg === "success") {
-            alert("yes");
+          if (res.data.key === "success") {
+            this.$toast.add({
+              detail: `${res.data.msg}`,
+              life: 3000,
+              severity: "success",
+            });
+            this.visible = true;
+          } else {
+            this.$toast.add({
+              detail: `${res.data.msg}`,
+              life: 3000,
+              severity: "error",
+            });
           }
         })
         .catch((error) => {
