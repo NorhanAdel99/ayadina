@@ -2,13 +2,13 @@
     <ui-base-container>
         <div class="row mb-3 justify-content-center">
             <div class="col-md-8">
-                <ui-base-card class="mb-3">
+                <ui-base-card class="mb-3 provider">
                     <div class="d-flex justify-content-between align-items-start gap-10 flex-wrap ">
                         <div class="d-flex align-items-start gap-10">
                             <img :src="provider.image" alt="image" class="circleImg">
                             <div>
                                 <div class="d-flex gap-30 align-items-center mb-2">
-                                    <h5 class=""> {{ provider.name }} </h5>
+                                    <h5 class="name"> {{ provider.name }} </h5>
                                     <div>
                                         <span> {{ provider.rate_average }} </span>
                                         <font-awesome-icon icon="fa-solid fa-star" class="text-warning " />
@@ -32,26 +32,30 @@
                             <ui-base-button label="Show" icon="pi pi-external-link" @click="report_provider"
                                 class="border-danger  main_btn transparent_btn text-danger gap-10">
                                 <font-awesome-icon :icon="['fas', 'flag']" color="red" />
-                                <span>{{ $t("Report") }}</span>
+                                <span class="text-danger">{{ $t("Report") }}</span>
                             </ui-base-button>
                         </div>
                     </div>
-                    <p class="text-muted"> {{ provider.description }}</p>
+                    <p class="text-muted my-2 description"> {{ provider.description }}</p>
                 </ui-base-card>
-                <div class="flex-center">
-                    <ui-base-button mode="main_btn lg" link to="/previousWork"> {{ $t("See_previous_works")
-                    }}</ui-base-button>
+                <!-- end show provider -->
+                <div class="flex-center my-2">
+                    <ui-base-button mode="main_btn lg" link :to="`prevWorks/${provider.id}`">
+                        {{ $t("See_previous_works") }}
+                    </ui-base-button>
                 </div>
                 <!--  start add rate -->
-                <ui-base-button mode="main_btn lg mb-3" @click="add_rate = true"> {{ $t("Evaluate") }}</ui-base-button>
+                <div class="evaluate"> <ui-base-button mode="main_btn lg mb-3" @click="add_rate = true"> {{ $t("Evaluate")
+                }}</ui-base-button>
+                </div>
                 <!-- end add rate -->
-                <ui-base-card v-for="rate in rating" :key="rate.rate_id" class="my-3">
+                <ui-base-card v-for="rate in rating" :key="rate.rate_id" class="my-3 myRate">
                     <div>
                         <div class="flex-between">
                             <div class="d-flex align-items-center gap-10">
                                 <img src="../../assets/imgs/G2.png" alt="" class="circleImg">
                                 <div class="mb-3">
-                                    <h5 class="mb-2"> {{ rate.user.name }} </h5>
+                                    <h5 class="mb-2 name"> {{ rate.user.name }} </h5>
                                     <h6 class="text-muted">{{ rate.created_at }} </h6>
                                 </div>
                             </div>
@@ -59,7 +63,7 @@
                             <button label="Show" icon="pi pi-external-link" @click="ReportComment(rate.rate_id)"
                                 class="border-danger main_btn transparent_btn text-danger gap-10">
                                 <font-awesome-icon :icon="['fas', 'flag']" color="red" />
-                                <span>{{ $t("Report") }}</span>
+                                <span class="text-danger">{{ $t("Report") }}</span>
                             </button>
                         </div>
                         <Rating v-model="rate.rate" :cancel="false" class="mb-3" readonly />
@@ -137,8 +141,7 @@
                 <div class="card p-3">
                     <form @submit.prevent="addRate">
                         <Rating v-model="RateValue" :cancel="false" />
-                        <!-- <form-control textarea id="rate">أضف تعليقك</form-control> -->
-                        <inputsFormControl type="text" id="addComment" textarea v-model.trim="comment"> {{
+                        <inputsFormControl type="text" id="addComment" textarea v-model.trim="comment" class="my-2"> {{
                             $t("addComment") }}
                         </inputsFormControl>
                         <div class="flex-center">
@@ -166,51 +169,50 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <form @submit.prevent="complaintOfComment">
-                        <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name"> {{ $t("name") }}
-                        </inputsFormControl>
-                        <inputsFormControl type="email" name="email" id="ownerName" v-model.trim="email"> {{ $t("email") }}
-                        </inputsFormControl>
-                        <div class="form-group">
-                            <label class="form-label" id="phone">
-                                {{ $t("phoneNumber") }}
-                                <span class="text-danger"> * </span>
-                            </label>
-                            <div class="with_cun_select">
-                                <input type="number" id="phone" class="main_input form-control" v-model="phone">
-                                <div class="card d-flex justify-content-center dropdown_card">
-                                    <Dropdown v-model="selectedCountry" :options="countries" optionLabel="name">
-                                        <template #value="slotProps">
-                                            <div v-if="slotProps.value" class="flex-group-me">
-                                                <img :alt="slotProps.value.label" :src="slotProps.value.image"
-                                                    style="width: 24px" />
-                                                <div>{{ slotProps.value.code }}</div>
-                                            </div>
-                                            <span v-else>
-                                                {{ slotProps.placeholder }}
-                                            </span>
-                                        </template>
-                                        <template #option="slotProps">
-                                            <div class="flex-group-me">
-                                                <img :alt="slotProps.option.code" :src="slotProps.option.image"
-                                                    width="20rem" />
-                                                <div>{{ slotProps.option.code }}</div>
-                                            </div>
-                                        </template>
-                                    </Dropdown>
-                                </div>
+                    <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name"> {{ $t("name") }}
+                    </inputsFormControl>
+                    <inputsFormControl type="email" name="email" id="ownerName" v-model.trim="email"> {{ $t("email") }}
+                    </inputsFormControl>
+                    <div class="form-group">
+                        <label class="form-label" id="phone">
+                            {{ $t("phoneNumber") }}
+                            <span class="text-danger"> * </span>
+                        </label>
+                        <div class="with_cun_select">
+                            <input type="number" id="phone" class="main_input form-control" v-model="phone">
+                            <div class="card d-flex justify-content-center dropdown_card">
+                                <Dropdown v-model="selectedCountry" :options="countries" optionLabel="name">
+                                    <template #value="slotProps">
+                                        <div v-if="slotProps.value" class="flex-group-me">
+                                            <img :alt="slotProps.value.label" :src="slotProps.value.image"
+                                                style="width: 24px" />
+                                            <div>{{ slotProps.value.code }}</div>
+                                        </div>
+                                        <span v-else>
+                                            {{ slotProps.placeholder }}
+                                        </span>
+                                    </template>
+                                    <template #option="slotProps">
+                                        <div class="flex-group-me">
+                                            <img :alt="slotProps.option.code" :src="slotProps.option.image" width="20rem" />
+                                            <div>{{ slotProps.option.code }}</div>
+                                        </div>
+                                    </template>
+                                </Dropdown>
                             </div>
                         </div>
-                        <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> {{
-                            $t("Message_Subject") }}
-                        </inputsFormControl>
+                    </div>
+                    <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> {{
+                        $t("Message_Subject") }}
+                    </inputsFormControl>
 
-                        <div class="flex-center">
-                            <ui-base-button class="main_btn">
-                                {{
-                                    $t("send") }}
-                            </ui-base-button>
-                        </div>
-                    </form>
+                    <div class="flex-center">
+                        <ui-base-button class="main_btn">
+                            {{
+                                $t("send") }}
+                        </ui-base-button>
+                    </div>
+                </form>
 
             </div>
         </div>
@@ -238,7 +240,7 @@ export default {
             showReport: false,
             add_rate: false,
             successRate: false,
-            showReportComment:false,
+            showReportComment: false,
             visible4: false,
             id: useRoute().params.id,
             selectedCountry: {
@@ -255,7 +257,7 @@ export default {
             token: "",
             RateValue: "",
             comment: "",
-            rate_id:""
+            rate_id: ""
 
 
         }
@@ -373,8 +375,30 @@ export default {
 
 }
 </script>
-<style scoped>
-/* .report{
- color: red;
-} */
-</style>
+<style lang="scss" >
+.p-rating .p-rating-icon {
+    color: var(--bs-warning);
+}
+
+@media (max-width:600px) {
+    .provider , .myRate {
+
+        .name,
+        .description {
+            font-size: 14px;
+        }
+
+        button,
+        a {
+            font-size: 14px;
+            width: 100px;
+        }
+
+       
+    }
+    .evaluate {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+}</style>

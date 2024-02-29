@@ -4,10 +4,11 @@
             <steps></steps>
             <!-- @submit="noRegister" -->
             <form @submit.prevent="registerForm">
-                <inputs-form-control type="text" id="name" v-model.trim="name"> الاسم</inputs-form-control>
+                <inputs-form-control type="text" id="name" v-model.trim="name"> {{ $t('name') }}
+                </inputs-form-control>
                 <div class="form-group">
                     <label class="form-label" id="phone">
-                        رقم الجوال
+                        {{ $t('phoneNumber') }}
                         <span class="text-danger"> * </span>
                     </label>
                     <div class="with_cun_select">
@@ -34,24 +35,33 @@
                         </div>
                     </div>
                 </div>
-                <inputs-form-control type="email" id="email" v-model.trim="email"> البريد الالكتروني </inputs-form-control>
-                <inputs-form-control type="password" id="password" v-model.trim="password"> كلمة المرور
+                <inputs-form-control type="email" id="email" v-model.trim="email"> {{ $t('email') }}
                 </inputs-form-control>
-                <inputs-form-control type="password" id="password2" v-model.trim="password_confirm"> تأكيد كلمة المرور
+                <inputs-form-control type="password" id="password" v-model.trim="password">
+                    {{ $t('password') }}
+
+                </inputs-form-control>
+                <inputs-form-control type="password" id="password2" v-model.trim="password_confirm">
+                    {{ $t('confirm_password') }}
+
                 </inputs-form-control>
                 <label for="checkBox" class="d-flex gap-10 align-items-center mb-3">
                     <input type="checkbox" id="checkBox" class="check" hidden>
                     <div class="checkShape">
                         <i class="fa-solid fa-check"></i>
                     </div>
-                    <span>أوافق علي الشروط والأحكام</span>
+                    <span> {{ $t('I_agree_to_the_terms') }}
+                    </span>
                 </label>
                 <div class="flex-center mb-3">
-                    <ui-base-button mode="main_btn lg">إنشاء حساب </ui-base-button>
+                    <ui-base-button mode="main_btn lg"> {{ $t('Create_account') }}
+                    </ui-base-button>
                 </div>
                 <NuxtLink link to="/login" class="text-center d-block">
-                    <span class="text-dark">لديك حساب ، </span>
-                    <span class="main_color"> قم بتسجيل الدخول </span>
+                    <span class="text-dark"> {{ $t('you_have_an_account') }}
+                    </span>
+                    <span class="main_color"> {{ $t('log_in') }}
+                    </span>
                 </NuxtLink>
                 <toast />
             </form>
@@ -104,7 +114,7 @@ export default {
             localStorage.setItem("email", this.email);
             this.code = this.selectedCountry.code.replace(/\+/g, '');
             try {
-                await useAuthStore().signUp({ name: this.name, email: this.email, phone: this.phone, country_code: this.code, password: this.password , password_confirm: this.password_confirm });
+                await useAuthStore().signUp({ name: this.name, email: this.email, phone: this.phone, country_code: this.code, password: this.password, password_confirm: this.password_confirm });
 
             } catch (error) {
                 console.error('Login error:', error);

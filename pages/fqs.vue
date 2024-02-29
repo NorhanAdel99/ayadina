@@ -1,5 +1,5 @@
 <template>
-    <ui-main-title> الأسئلة الشائعة </ui-main-title>
+    <ui-main-title>  {{  $t('common_questions')}}</ui-main-title>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <img src="../assets/imgs/Phone customization-rafiki 1.png" alt="" class="aboutSectionImg sm">

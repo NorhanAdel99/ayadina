@@ -2,13 +2,13 @@
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 firebase.initializeApp({
-  apiKey: "AIzaSyB1hE97BBWVGZcYcXp_XmIFEWTlaRcQrTo",
-  authDomain: "ayadina-notify.firebaseapp.com",
-  projectId: "ayadina-notify",
-  storageBucket: "ayadina-notify.appspot.com",
-  messagingSenderId: "908007313296",
-  appId: "1:908007313296:web:61d2e7bd9cb8df26c7ed15",
-  measurementId: "G-MKGCM8JMVY"
+  apiKey: "AIzaSyAOnoOWRfWyjikzmfLZAxZH6QnY-ntz-kY",
+  authDomain: "iadeena.firebaseapp.com",
+  projectId: "iadeena",
+  storageBucket: "iadeena.appspot.com",
+  messagingSenderId: "77497322474",
+  appId: "1:77497322474:web:adf8b165e16da034aa0093",
+  measurementId: "G-ELLVSKWMNL"
 } );
 const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {

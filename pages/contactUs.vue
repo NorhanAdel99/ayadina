@@ -1,16 +1,17 @@
 <template>
-    <ui-main-title> تواصل معنا </ui-main-title>
+    <ui-main-title> {{ $t('contact_us') }}</ui-main-title>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <img src="../assets/imgs/Phone customization-rafiki 1.png" alt="" class="aboutSectionImg">
             <form ref="formData" @submit.prevent="contact">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name"> الاسم
+                        <inputsFormControl type="text" name="name" id="ownerName" v-model.trim="name">
+                            {{ $t('name') }}
                         </inputsFormControl>
                         <div class="form-group">
                             <label class="form-label" id="phone">
-                                رقم الجوال
+                                {{ $t('phoneNumber') }}
                                 <span class="text-danger"> * </span>
                             </label>
                             <div class="with_cun_select">
@@ -38,11 +39,12 @@
                                 </div>
                             </div>
                         </div>
-                        <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> موضوع الرسالة
+                        <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege">
+                            {{ $t('Message_Subject') }}
                         </inputsFormControl>
                         <div class="flex-center">
                             <ui-base-button class="main_btn lg" label="Show" icon="pi pi-external-link"
-                                @click="visible = true"> ارسال </ui-base-button>
+                                @click="visible = true"> {{ $t('send') }} </ui-base-button>
                         </div>
                     </div>
                 </div>
@@ -56,9 +58,10 @@
         <h6 class="text-center mb-3" v-else>
             {{ msg }}
         </h6>
-        <h6 class="text-center mb-3"> سيتم التواصل معك من خلال مقدمي الخدمات</h6>
+        <h6 class="text-center mb-3"> {{ $t('You_will_be_contacted_through_service_providers') }} </h6>
         <div class="flex-center">
-            <ui-base-button mode="main_btn" @click="visible = false" link :to="localePath('/')"> رجوع للقسم
+            <ui-base-button mode="main_btn" @click="visible = false" link :to="localePath('/')"> 
+                {{  $t('Back_to_the_section')}}
             </ui-base-button>
         </div>
     </Dialog>
@@ -118,7 +121,7 @@ export default {
                 message: this.messege,
                 country_code: this.code
             };
-           await  this.axios.post('/send-contact', this.formData)
+            await this.axios.post('/send-contact', this.formData)
                 .then((response) => {
 
                     console.log(response.data.key);

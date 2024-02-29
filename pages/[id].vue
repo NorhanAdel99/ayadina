@@ -8,57 +8,27 @@
       <div class="flex-between flex-wrap border-bottom mb-3 pb-3 gap-5">
         <h6 class="title-border lg">مقدمي الخدمة</h6>
         <div class="d-flex align-items-center gap-10 flex-wrap">
-          <Dropdown
-            v-model="selectedCity"
-            :options="cities"
-            optionLabel="name"
-            placeholder="select a city"
-            class="form-control d-flex justify-content-between fixedBox"
-            @change="onCityChange"
-          />
-          <Dropdown
-            v-model="selectedRegion"
-            :options="regions"
-            optionLabel="name"
-            placeholder="select a region"
-            class="form-control d-flex justify-content-between fixedBox"
-            @change="onRegionChange"
-          />
-          <input
-            type="search"
-            class="form-control fixedBox"
-            v-model="searchProviders"
-            @input="handleSearch"
-          />
+          <Dropdown v-model="selectedCity" :options="cities" optionLabel="name" placeholder="select a city"
+            class="form-control d-flex justify-content-between fixedBox" @change="onCityChange" />
+          <Dropdown v-model="selectedRegion" :options="regions" optionLabel="name" placeholder="select a region"
+            class="form-control d-flex justify-content-between fixedBox" @change="onRegionChange" />
+          <input type="search" class="form-control fixedBox" v-model="searchProviders" @input="handleSearch" />
         </div>
       </div>
       <div class="row">
-        <div
-          class="col-lg-3 col-sm-6"
-          v-for="provider in providers"
-          :key="provider.id"
-        >
-          <NuxtLink
-            :to="'/provider/' + provider.id"
-            class="rounded-2 main_border overflow-auto mb-3 d-block text-dark"
-          >
+        <div class="col-lg-3 col-sm-6" v-for="provider in providers" :key="provider.id">
+          <NuxtLink :to="'/provider/' + provider.id" class="rounded-2 main_border overflow-auto mb-3 d-block text-dark">
             <img :src="provider.image" alt="" class="providerImg" />
             <div class="p-2">
               <h6 class="mb-2">{{ provider.name }}</h6>
               <div class="flex-between">
                 <div>
-                  <font-awesome-icon
-                    icon="fa-solid fa-list-check"
-                    class="m-end-5"
-                  />
+                  <font-awesome-icon icon="fa-solid fa-list-check" class="m-end-5" />
                   <span> {{ provider.membership_number }} </span>
                 </div>
                 <div>
                   <span class="m-end-5">{{ provider.rate_average }}</span>
-                  <font-awesome-icon
-                    icon="fa-solid fa-star"
-                    class="text-warning"
-                  />
+                  <font-awesome-icon icon="fa-solid fa-star" class="text-warning" />
                 </div>
               </div>
             </div>
@@ -72,11 +42,7 @@
         <div class="flex-between border-bottom mb-3 py-3">
           <h5 class="title-border main_color">الطلبات الخاصة</h5>
         </div>
-        <div
-          v-for="order in mySpecialOrders"
-          :key="order.id"
-          class="rounded-2 p-2 main_border mb-3"
-        >
+        <div v-for="order in mySpecialOrders" :key="order.id" class="rounded-2 p-2 main_border mb-3">
           <div class="flex-between">
             <div>
               <h6 class="mb-2 main_color">{{ order.title }}</h6>
@@ -89,67 +55,44 @@
           </div>
         </div>
         <ui-base-button mode="btn main_btn lg mx-auto" @click="visible3 = true">
-          اضافة طلب خاص
+          {{ $t('Add_a_special_request') }}
         </ui-base-button>
       </div>
     </div>
   </div>
-  <Dialog
-    v-model:visible="visible3"
-    modal
-    header="ابلاغ"
-    :style="{ width: '50rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
+  <Dialog v-model:visible="visible3" modal :header="$t('Report')" :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <div class="row justify-content-center">
       <div class="col-md-10">
         <form @submit.prevent="createSpecialOrder">
-          <inputs-form-control type="text" :id="name" v-model.trim="title"
-            >عنوان الطلب
+          <inputs-form-control type="text" :id="name" v-model.trim="title">
+            {{ $t('Order_address') }}
           </inputs-form-control>
-          <inputs-form-control
-            id="text"
-            type="text"
-            textarea
-            v-model.trim="description"
-          >
-            الوصف
+          <inputs-form-control id="text" type="text" textarea v-model.trim="description">
+            {{ $t('the_description') }}
+
           </inputs-form-control>
 
           <div class="flex-center mb-3">
-            <ui-base-button
-              icon="pi pi-check"
-              aria-label="Close"
-              class="main_btn"
-            >
-              نشر الطلب
+            <ui-base-button icon="pi pi-check" aria-label="Close" class="main_btn">
+              {{ $t('Post_the_request') }}
             </ui-base-button>
           </div>
         </form>
       </div>
     </div>
   </Dialog>
-  <Dialog
-    v-model:visible="visible4"
-    modal
-    :style="{ width: '50rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
-    <font-awesome-icon
-      icon="fa-regular fa-circle-check"
-      class="modal-exclam-mark mb-3 main_color"
-    />
-    <h6 class="text-center mb-3">تم نشر طلبك بنجاح</h6>
-    <h6 class="text-center mb-3">سيتم التواصل معك من خلال مقدمي الخدمات</h6>
+  <Dialog v-model:visible="visible4" modal :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <font-awesome-icon icon="fa-regular fa-circle-check" class="modal-exclam-mark mb-3 main_color" />
+    <h6 class="text-center mb-3"> {{ $t('Your_request') }}
+    </h6>
+    <h6 class="text-center mb-3"> {{ $t('You_will_be_contacted') }}
+    </h6>
     <div class="flex-center mb-3">
-      <ui-base-button
-        icon="pi pi-check"
-        aria-label="Close"
-        type="button"
-        class="main_btn"
-        @click="visible4 = false"
-      >
-        رجوع للقسم
+      <ui-base-button icon="pi pi-check" aria-label="Close" type="button" class="main_btn" @click="visible4 = false">
+        {{ $t('Back_to_the_section') }}
+
       </ui-base-button>
     </div>
   </Dialog>
@@ -200,8 +143,8 @@ export default {
         console.log(error);
       });
   },
-  
-   mounted() {
+
+  mounted() {
     this.token = useAuthStore().token;
     console.log(this.token);
     this.axios
@@ -212,19 +155,19 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
-     this.getSpecialOrders()
+    this.getSpecialOrders()
   },
   methods: {
-    getSpecialOrders(){
+    getSpecialOrders() {
       this.axios
-      .get(`/special-orders/${useRoute().params.id}`)
-      .then((response) => {
-        this.mySpecialOrders = response.data.data.special_orders;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-     
+        .get(`/special-orders/${useRoute().params.id}`)
+        .then((response) => {
+          this.mySpecialOrders = response.data.data.special_orders;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
     },
     createSpecialOrder() {
       const FormData = {
@@ -261,7 +204,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      
+
     },
     selectRegions() {
       this.axios
