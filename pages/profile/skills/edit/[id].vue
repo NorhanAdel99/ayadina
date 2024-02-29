@@ -1,113 +1,77 @@
 <template>
-  <ui-main-title> تعديل مهارة </ui-main-title>
+  <ui-main-title> {{ $t("Modify_a_skill") }}</ui-main-title>
   <div class="row justify-content-center">
     <div class="col-md-10">
-      <form
-        @submit.prevent="editSkills"
-        enctype="multipart/form-data"
-        ref="editSkill"
-      >
+      <form @submit.prevent="editSkills" enctype="multipart/form-data" ref="editSkill">
         <inputs-form-control id="nameAr" type="text" v-model="nameAr">
-          اسم المهارة باللغة العربية
+          {{ $t("Skill_name_in_Arabic") }}
         </inputs-form-control>
         <inputs-form-control id="nameEn" type="text" v-model="nameEn">
-          اسم المهارة باللغة الانجليزية
+          {{ $t("Skill_name_in_English") }}
         </inputs-form-control>
 
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5"> القسم الرئيسيي</span>
+            <span class="m-end-5"> {{ $t("Main_section") }}</span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown
-            v-model="selectedCategory"
-            :options="categories"
-            optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between"
-            @change="selectedsubCategory"
-          />
+          <Dropdown v-model="selectedCategory" :options="categories" optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between" @change="selectedsubCategory" />
         </div>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5"> القسم الفرعي </span>
+            <span class="m-end-5"> {{ $t("Subsection") }}</span>
             <span class="text-danger">*</span>
           </label>
-          <Dropdown
-            v-model="selectsubCategory"
-            :options="subCategories"
-            optionLabel="name"
-            class="w-100 form-control d-flex justify-content-between"
-          />
+          <Dropdown v-model="selectsubCategory" :options="subCategories" optionLabel="name"
+            class="w-100 form-control d-flex justify-content-between" />
         </div>
 
         <inputs-form-control textarea id="descripe" v-model="descriptionAr">
-          وصف المهارة
+          {{ $t("Description_of_the_skill_in_english") }}
+
         </inputs-form-control>
         <inputs-form-control textarea id="descripe" v-model="descriptionEn">
-          وصف المهارة
+          {{ $t("Description_of_the_skill_in_Arabic") }}
         </inputs-form-control>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5">المدينة</span>
+            <span class="m-end-5"> {{ $t("city") }}
+            </span>
 
             <span class="text-danger">*</span>
           </label>
-          <MultiSelect
-            v-model="selectedCities"
-            :options="cities"
-            optionLabel="name"
-            :maxSelectedLabels="8"
-            @change="selectRegions"
-            class="w-100"
-          />
+          <MultiSelect v-model="selectedCities" :options="cities" optionLabel="name" :maxSelectedLabels="8"
+            @change="selectRegions" class="w-100" />
         </div>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5">المناطق</span>
+            <span class="m-end-5">{{ $t("Regions") }}</span>
             <span class="text-danger">*</span>
           </label>
 
-          <MultiSelect
-            v-model="selectedRegions"
-            :options="regions"
-            optionLabel="name"
-            :maxSelectedLabels="8"
-            class="w-100"
-          />
+          <MultiSelect v-model="selectedRegions" :options="regions" optionLabel="name" :maxSelectedLabels="8"
+            class="w-100" />
         </div>
-        <inputs-imgPreviewMulti :images="images" :updateImages="handleImageUpdate" />
-  
+        <div>
+        </div>
         <div class="flex-center">
-          <ui-base-button
-            class="main_btn lg"
-            @click="visible = true"
-            label="Show"
-          >
-        حفظ مهارة</ui-base-button
-          >
+          <ui-base-button class="main_btn lg" @click="visible = true" label="Show">
+            {{ $t("Save_skill") }}
+          </ui-base-button>
         </div>
       </form>
     </div>
   </div>
-  <Dialog
-    v-model:visible="visible"
-    modal
-    :style="{ width: '50rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
-    <font-awesome-icon
-      icon="fa-regular fa-circle-check"
-      class="modal-exclam-mark mb-3 main_color"
-    />
-    <h6 class="text-center mb-3">تم تعديل المهارة بنجاح</h6>
+  <Dialog v-model:visible="visible" modal :style="{ width: '50rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <font-awesome-icon icon="fa-regular fa-circle-check" class="modal-exclam-mark mb-3 main_color" />
+    <h6 class="text-center mb-3"> {{ $t("The_skill_has_been_edit_successfully") }}
+    </h6>
     <div class="flex-center">
-      <ui-base-button
-        mode="main_btn"
-        @click="visible = false"
-        link
-        :to="'/profile/skills/' + this.selectedSkill.id"
-      >
-        رجوع
+      <ui-base-button mode="main_btn" @click="visible = false" link :to="'/profile/skills/' + this.selectedSkill.id">
+        {{ $t("back") }}
+
       </ui-base-button>
     </div>
   </Dialog>
@@ -154,13 +118,36 @@ export default {
       nameEn: "",
       descriptionAr: "",
       descriptionEn: "",
-// 
+      // 
       selectedCityIds: null,
     };
   },
 
 
   methods: {
+
+    handleFileSelect(event) {
+      const files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const imageUrl = URL.createObjectURL(file);
+        this.images.push({ file, url: imageUrl });
+      }
+    },
+    editImage(image) {
+      // Handle edit functionality for the image
+      console.log('Edit image:', image.file);
+    },
+    onImgsSelected(event) {
+      const Arrayfiles = Array.from(event.target.files);
+      Arrayfiles.forEach((element) => {
+        this.images.push(URL.createObjectURL(element));
+        console.log(this.images, "image array");
+      });
+    },
+    deletImg(index) {
+      this.imgsSrc.splice(index, 1);
+    },
     handleImageUpdate(updatedImages) {
       this.images = updatedImages;
     },
@@ -191,7 +178,7 @@ export default {
           })
           .catch((error) => {
             console.error(error);
-            
+
           });
       }
       // Make the API request to fetch regions based on selected cities
@@ -206,7 +193,8 @@ export default {
       formData.append("description[en]", this.descriptionEn);
       formData.append("category_id", this.selectedCategory.id);
       formData.append("sub_category_id", this.selectsubCategory.id);
-     
+      formData.append("images[]", this.images);
+
       for (let i = 0; i < this.selectedCities.length; i++) {
         formData.append("city_ids[]", this.selectedCities[i].id);
       }
@@ -215,7 +203,7 @@ export default {
       for (let i = 0; i < this.selectedRegions.length; i++) {
         formData.append("region_ids[]", this.selectedRegions[i].id);
       }
-    
+
 
       console.log(formData);
       await this.axios
@@ -317,9 +305,3 @@ export default {
   margin: 0 !important;
 }
 </style>
-<!-- created() {
-  this.imagePreviews = this.images.map((image, index) => ({
-    url: image.url,
-    name: image.name || `Image ${index + 1}`,
-  }));
-}, -->

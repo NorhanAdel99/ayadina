@@ -4,67 +4,54 @@
       <div class="col-md-5">
         <steps></steps>
         <form @submit.prevent="completeForm" ref="form">
-        
 
-         <div class="flex-center">
-            <InputsImgInput
-            :modelValue="userImg"
-            id="profileImg"
-            @update:modelValue="updateImageUrl"
-            @removeImage="removeImage"
-            @change="handleImageUpload"
-            name="image"
-          />
-         </div>
+
+          <div class="flex-center">
+            <InputsImgInput :modelValue="userImg" id="profileImg" @update:modelValue="updateImageUrl"
+              @removeImage="removeImage" @change="handleImageUpload" name="image" />
+          </div>
 
           <div class="form-group">
             <label class="form-label">
-              <span class="m-end-5">المدينة</span>
+              <span class="m-end-5">
+                {{ $t('city') }}
+
+              </span>
               <span class="text-danger">*</span>
             </label>
-            <Dropdown
-              v-model="selectedCity"
-              :options="cities"
-              optionLabel="name"
-              class="w-100 form-control d-flex justify-content-between"
-              @change="selectRegions"
-            />
+            <Dropdown v-model="selectedCity" :options="cities" optionLabel="name"
+              class="w-100 form-control d-flex justify-content-between" @change="selectRegions" />
           </div>
           <div class="form-group">
             <label class="form-label">
-              <span class="m-end-5"> المنطقه</span>
+              <span class="m-end-5">
+
+                {{ $t('Region') }}
+
+              </span>
               <span class="text-danger">*</span>
             </label>
-            <Dropdown
-              v-model="selectedRegion"
-              :options="regions"
-              optionLabel="name"
-              class="w-100 form-control d-flex justify-content-between"
-            />
+            <Dropdown v-model="selectedRegion" :options="regions" optionLabel="name"
+              class="w-100 form-control d-flex justify-content-between" />
           </div>
 
           <div class="form-group">
             <label for="descripe" class="form-label">
-              <span class="m-end-5"> الوصف </span>
+              <span class="m-end-5">
+                {{ $t('description') }}
+
+              </span>
               <span class="text-danger">*</span>
             </label>
-            <textarea
-              name="description"
-              id="descripe"
-              class="form-control"
-              rows="5"
-            ></textarea>
+            <textarea name="description" id="descripe" class="form-control" rows="5"></textarea>
           </div>
           <div class="d-flex gap-10">
             <ui-base-button mode="main_btn flex-50">
-              إنشاء الحساب
+              {{ $t('Create_account') }}
             </ui-base-button>
-            <ui-base-button
-              link
-              to="/homepage"
-              mode="main_btn transparent_btn flex-50"
-            >
-              تخطي
+            <ui-base-button link to="/homepage" mode="main_btn transparent_btn flex-50">
+              {{ $t('skip') }}
+
             </ui-base-button>
           </div>
         </form>
@@ -108,7 +95,7 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
-  
+
   },
   methods: {
     updateImageUrl(newImageUrl) {
@@ -146,12 +133,12 @@ export default {
         })
         .then((res) => {
           console.log(useAuthStore().user)
-          if(res.data.key === 'success' ){
-           console.log(useAuthStore().user)
-            this.$toast.add({  detail: `${res.data.msg}`, life: 3000 });
+          if (res.data.key === 'success') {
+            console.log(useAuthStore().user)
+            this.$toast.add({ detail: `${res.data.msg}`, life: 3000 });
             setTimeout(function () {
-                useRouter().push({path: '/'})
-          }, 3000)
+              useRouter().push({ path: '/' })
+            }, 3000)
           }
         })
         .catch((err) => {

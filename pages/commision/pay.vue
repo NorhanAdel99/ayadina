@@ -1,25 +1,28 @@
 <template>
     <ui-breadCrumb to="/">
-        <template v-slot:mainPage> الرئيسية </template>
-        <template v-slot:currentPage> عمولة الموقع </template>
+        <template v-slot:mainPage> {{ $t('home_title') }} </template>
+        <template v-slot:currentPage> {{ $t('Site_commission') }} </template>
     </ui-breadCrumb>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <ui-base-card>
-                <ui-main-title> برجاء ارفاق صورة الحوالة </ui-main-title>
-                <form ref="payForm" @submit.prevent="payCommission">
+                <ui-main-title> {{ $t("Please_attach_a_copy_of_the_transfer") }}</ui-main-title>
+                <form ref="payForm" @submit.prevent="payCommission" class="form">
                     <div class="row justify-content-center">
                         <div class="col-md-8">
-                            <inputs-form-control type="text" id="ownerName" v-model.trim="name"> اسم صاحب المحل
+                            <inputs-form-control type="text" id="ownerName" v-model.trim="name"> {{ $t(
+                                "Name_of_the_shop_owner") }}
                             </inputs-form-control>
-                            <inputs-form-control type="number" id="number" v-model.trim="acccountNum"> رقم الحساب المحول منه
+                            <inputs-form-control type="number" id="number" v-model.trim="acccountNum">
+                                {{ $t("Account_number_transferred_from") }}
                             </inputs-form-control>
-                            <inputs-form-control type="text" id="bankName" v-model="bankName"> اسم بنك الحساب المحول منه
+                            <inputs-form-control type="text" id="bankName" v-model="bankName"> {{ $t(
+                                "Name_of_the_bank_the_account_is_transferred_from") }}
                             </inputs-form-control>
                             <InputsImgInput :modelValue="img" @update:modelValue="updateImageUrl" @removeImage="removeImage"
                                 name="image" id="image" />
                             <div class="flex-center">
-                                <ui-base-button class="main_btn lg"> ارسال </ui-base-button>
+                                <ui-base-button class="main_btn lg"> {{ $t("send") }} </ui-base-button>
                             </div>
                         </div>
                     </div>
@@ -76,11 +79,17 @@ export default {
 
 }
 </script>
-<style >
+<style  lang="scss" scoped>
 .base-image-input {
     border: 1px dashed #12a7d8 !important;
     margin: 0 !important;
 }
-</style>
+
+@media (max-width:768px) {
+.form{
+    font-size: 14px;
+}
+  
+}</style>
 
 

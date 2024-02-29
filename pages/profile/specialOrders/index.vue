@@ -19,7 +19,7 @@
             </div>
             <div v-else>
                 <div class="text-danger">
-                    no orders until now
+                    {{ $t("no_orders_until_now") }}
                 </div>
             </div>
 

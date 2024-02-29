@@ -1,24 +1,18 @@
 <template>
-  <ui-main-title> إضافة مهارة </ui-main-title>
-  <ul>
-    <li v-for="n in name" :key="n.id">
-      <p>v-if English: {{ n.en }}</p>
-      <p>Arabic: {{ n.ar }}</p>
-    </li>
-  </ul>
+  <ui-main-title>{{ $t("add_Skill") }} </ui-main-title>
   <div class="row justify-content-center">
     <div class="col-md-10">
       <form @submit.prevent="addSkill" enctype="multipart/form-data" ref="addSkill">
         <inputs-form-control id="nameAr" type="text" v-model="nameAr">
-          اسم المهارة باللغة العربية
+          {{ $t("Skill_name_in_Arabic") }}
         </inputs-form-control>
         <inputs-form-control id="nameEn" type="text" v-model="nameEn">
-          اسم المهارة باللغة الانجليزية
+          {{ $t("Skill_name_in_English") }}
         </inputs-form-control>
 
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5"> القسم الرئيسيي</span>
+            <span class="m-end-5">  {{ $t("Main_section") }}</span>
             <span class="text-danger">*</span>
           </label>
           <Dropdown v-model="selectedCategory" :options="categories" optionLabel="name"
@@ -26,7 +20,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5"> القسم الفرعي </span>
+            <span class="m-end-5">  {{ $t("Subsection") }} </span>
             <span class="text-danger">*</span>
           </label>
           <Dropdown v-model="selectsubCategory" :options="subCategories" optionLabel="name"
@@ -34,14 +28,14 @@
         </div>
 
         <inputs-form-control textarea id="descripe" v-model="descriptionAr">
-          وصف المهارة
+          {{ $t("Description_of_the_skill_in_Arabic") }}
         </inputs-form-control>
         <inputs-form-control textarea id="descripe" v-model="descriptionEn">
-          وصف المهارة
+          {{ $t("Description_of_the_skill_in_english") }}
         </inputs-form-control>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5">المدينة</span>
+            <span class="m-end-5">{{ $t("city") }}</span>
 
             <span class="text-danger">*</span>
           </label>
@@ -50,7 +44,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">
-            <span class="m-end-5">المناطق</span>
+            <span class="m-end-5">{{ $t("Regions") }}</span>
             <span class="text-danger">*</span>
           </label>
 
@@ -59,12 +53,13 @@
         </div>
 
         <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
+          
           <inputs-img-preview-multi name="images[]" :onRemove="handleImageRemove" @update:images="handleImageUpdate" />
         </div>
         <div class="flex-center">
           <!-- @click="visible = true" label="Show" -->
           <ui-baseButton class="main_btn lg">
-            تعديل مهارة</ui-baseButton>
+            {{ $t("add_Skill") }}</ui-baseButton>
         </div>
       </form>
       <toast />
@@ -73,10 +68,10 @@
   <Dialog v-model:visible="visible" modal :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <font-awesome-icon icon="fa-regular fa-circle-check" class="modal-exclam-mark mb-3 main_color" />
-    <h6 class="text-center mb-3">تم إضافة المهارة بنجاح</h6>
+    <h6 class="text-center mb-3">  {{ $t("The_skill_has_been_added_successfully") }}  </h6>
     <div class="flex-center">
       <ui-base-button mode="main_btn" @click="visible = false" link to="/profile">
-        رجوع
+        {{ $t("back") }}
       </ui-base-button>
     </div>
   </Dialog>

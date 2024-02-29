@@ -1,9 +1,9 @@
 <template>
     <base-container>
     <ui-breadCrumb to="/profile">
-            <template v-slot:mainPage> الملف الشخصي </template>
-            <template v-slot:> تفاصيل المهارة </template>
-            <template v-slot:currentPage>  الاعمال السابق  </template>
+            <template v-slot:mainPage>  {{  $t('personalFile')}}</template>
+            <template v-slot:> {{  $t('Skill_details')}}</template>
+            <template v-slot:currentPage>{{  $t('previous_works')}} </template>
 
         </ui-breadCrumb>
         <div class="row">
