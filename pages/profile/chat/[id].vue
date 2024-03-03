@@ -7,74 +7,62 @@
     <div class="row justify-content-center">
       <div class="col-md-10">
         <ui-base-card class="chatCard">
-          <div class="chatContainer">
-            <div class="row">
-              <div class="col-md-7">
-                <div
-                  class="d-flex gap-2 align-items-center mb-3 sender"
-                  v-for="message in messages"
-                  :key="message.id"
-                >
-                  <img src="@/assets/imgs/G2.png" a alt="" class="userImgc" />
-                  <div class="containMessege">
-                    <div class="messege" v-if="message.type === 'text'">
-                      {{ message.content }}
-                    </div>
-                    <img
-                      v-if="message.image"
-                      :src="message.image"
-                      alt="Sent Image"
-                    />
-                    <!-- <img :src="message.content" alt="Image" /> -->
-                  </div>
+          <div ref="chatContainer" class="chatContainer">
+         
+            <div class="d-flex gap-2 align-items-center mb-3 message" :class="{ receiver: !message.is_sender }"
+              v-for="message in allMessages" :key="message.id">
+              <img :src="members.image" alt="" class="userImgc" />
+              <div class="containMessege">
+                <p v-if="message.type === 'text'" class="wordwrap mb-2">
+                  {{ message.body }}
+                </p>
+                <img v-if="message.type === 'file'" :src="message.body" alt="Sent Image" class="messagebodyImg mb-2" />
+                <div class="text-start text-muted f-10  d-block">
+                  <font-awesome-icon :icon="['far', 'clock']" class="m-end-5 text-muted" />
+                  <span> {{ message.created_dt }}</span>
                 </div>
               </div>
-            </div>
-            <div class="row justify-content-end">
-              <div class="col-md-7">
-                <div class="d-flex gap-2 align-items-center mb-3 reciever">
-                  <div class="containMessege">
-                    messege
-                    <div class="messege"></div>
-                  </div>
-                  <img src="@/assets/imgs/G2.png" alt="" class="userImgc" />
-                </div>
-              </div>
-            </div>
-          </div>
-            <form ref="chatForm" @submit.prevent="sendMessage">
-          <div class="inputContainer p-2"> 
-              <label :for="id" class="base-image-input">
-                <img v-if="imageUrl" :src="imageUrl" alt="Image Preview"  />
-                <span v-if="!imageUrl" class="select">
-                  <font-awesome-icon icon="fa-solid fa-upload" />
-                </span>
-                <input  ref="fileInput" type="file" @change="handleFileChange" hidden :id="id" :name="name"   accept="image/*"/>
-             </label>
-   
-            <textarea
-              v-model="inputMessage"
-              placeholder="Type your message"
-            ></textarea>
+             
 
-            <!-- <input type="text" class="flex-grow" placeholder="اكتب رسالتك.." v-model="messageText" @keyup.enter="sendMessage" /> -->
-            <ui-base-button mode="sendMsg main_btn sm" @click="sendMessage">
-              <font-awesome-icon
-                :icon="['fas', 'paper-plane']"
-                class="iconSend"
-              />
-              <span class="send"> ارسال </span>
-            </ui-base-button>
+            </div>
+            <form ref="chatForm" @submit.prevent="sendMessage">
+              <div class="inputContainer p-2">
+                <label :for="id" class="base-image-input">
+
+                  <span class="select">
+                    <font-awesome-icon :icon="['far', 'image']" />
+                  </span>
+                  <input ref="fileInput" type="file" @change="handleFileChange" hidden :id="id" name="message"
+                    accept="image/*" />
+                </label>
+                <textarea v-model="message" placeholder="Type your message" @keyup.enter="sendMessage"
+                  :disabled="imageUrl !== ''"></textarea>
           
-            
+                <div class="position-relative px-3">
+                  <span @click="removeImage" class="removeImg">
+                    <font-awesome-icon :icon="['fas', 'xmark']" v-if="imageUrl" class="text-danger " />
+                  </span>
+                  <img v-if="imageUrl !== ''" :src="imageUrl" alt="Image Preview" class="messageImg" />
+                </div>
+
+                <ui-base-button mode="sendMsg main_btn sm">
+                  <font-awesome-icon :icon="['fas', 'paper-plane']" class="iconSend" />
+                  <span class="send"> ارسال </span>
+                </ui-base-button>
+              </div>
+            </form>
           </div>
-        </form>
         </ui-base-card>
       </div>
     </div>
   </base-container>
 </template>
 <script>
+import { useAuthStore } from '@/store/authStore'
+// import io from 'socket.io-client';
+import socket from '@/plugins/socket'
+import moment from 'moment';
+
 export default {
   data() {
     return {
@@ -82,86 +70,169 @@ export default {
       messageText: "",
       selectedFile: null,
       messages: [],
+      allMessages: [],
       imagePreview: null,
-      inputMessage: "",
+      message: "",
       imageUrl: '',
+      socket: null,
+      members: [],
+      uploadedimg: "",
+
     };
   },
-  mounted(){
-    console.log(this.messages)
+  mounted() {
+    this.token = useAuthStore().token;
+    this.initializeChat();
   },
 
   methods: {
-    sendMessage() {
-      if (this.inputMessage.trim() !== "" || this.selectedFile) {
-        const message = { id: Date.now() };
-
-        if (this.inputMessage.trim() !== "") {
-          message.type = "text";
-          message.content = this.inputMessage;
-    console.log(this.messages)
-
-        }
-
-        if (this.selectedFile) {
-         
-          const formData = new FormData(this.$refs.chatForm);
-          formData.append("image", this.selectedFile);
-
-          this.$axios
-            .post("/", formData)
-            .then((response) => {
-              message.type = "image";
-              message.content = response.data.imageUrl;
-              this.messages.push(message);
-              this.inputMessage = "";
-              this.selectedFile = null;
-              // Scroll to bottom after adding the message
-              this.scrollToBottom();
-              // Emit the message to the server
-              // this.socket.emit('chat message', message);
-            })
-            .catch((error) => {
-              console.error("Error uploading image:", error);
-            });
-        } else {
-          this.messages.push(message);
-          this.inputMessage = "";
-          // Scroll to bottom after adding the message
-          this.scrollToBottom();
-          // Emit the message to the server
-          // this.socket.emit('chat message', message);
-        }
-      }
-    },
-  
-    handleFileChange(event) {
-      this.selectedFile = event.target.files?.[0];
-      if (this.selectedFile) {
+    // uploadImage
+    uploadImage(e) {
+      const userImage = e.target.files[0];
+      if (userImage) {
         const reader = new FileReader();
-        reader.onload = () => {
-          this.imageUrl = reader.result;
-          this.$emit("update:modelValue", reader.result);
+        reader.readAsDataURL(userImage);
+        reader.onload = (e) => {
+          this.uploadedimg = e.target.result;
+     
+          this.uploadedName = userImage.name;
+          console.log(userImage);
         };
-        reader.readAsDataURL(this.selectedFile);
-      } else {
-        this.imageUrl = null;
-        this.$emit("update:modelValue", null);
       }
     },
-    openFileInput() {
-      this.$refs.fileInput.click();
+    removePreview() {
+      this.uploadedimg = "";
+      if (this.$refs.fileImgUp) {
+        this.$refs.fileImgUp.value = "";
+      }
+    },
+    async initializeChat() {
+      await this.getMesseges();
+      this.$socket.emit("enterChat", {
+        user_id: useRoute().params.id,
+        user_type: 'User',
+        room_id: useRoute().params.id,
+      });
+      this.$socket.on(
+        "sendMessageRes",
+        function (data) {
+          this.allMessages.push(data);
+        }.bind(this)
+      );
+    },
+    /// send mesege to socket 
+    sendMessageTosocket(messageBody, type) {
+      this.$socket.emit("sendMessage", {
+        sender_id: useAuthStore().user.id,
+        sender_type: 'User',
+        sender_name: useAuthStore().user.name,
+        avater: useAuthStore().user.image,
+        receiver_id: 1,
+        receiver_type: 'Admin',
+        room_id: this.$route.params.id,
+        type: type,
+        body: messageBody,
+      });
+    },
+
+    handleFileChange(e) {
+      const selectedFile = e.target.files[0];
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
+        reader.onload = (e) => {
+          this.imageUrl = e.target.result;
+          console.log(this.imageUrl);
+        };
+        this.selectedFile = selectedFile;
+      }
+    },
+    removeImage() {
+      this.selectedFile = '';
+      this.imageUrl = '';
+      this.$refs.fileInput.value = '';
+    },
+    pushMessage(messageBody, type) {
+      if (!this.allMessages.value) {
+        this.allMessages.value = [];
+      }
+      this.allMessages.push({
+        "is_sender": 1,
+        'type': type,
+        'body': messageBody,
+        "created_dt": moment().locale(localStorage.getItem('lang') || 'ar').fromNow()
+      });
+
+    },
+    sendImage(fd) {
+      fd.append("room_id", this.$route.params.id);
+      this.$axios.post(`send-message/${useRoute().params.id}`, fd, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${this.token}`
+        },
+      }).then((response) => {
+        console.log(response)
+        if (response.data.key === "success") {
+          // this.sendMessageTosocket(response.data.data.original_message.body, "file");
+          // sendMessageTosocket(response.data.data.file_url, "file");
+        } else {
+          console.error("Error uploading file:", response.data);
+        }
+      }).catch((error) => {
+        console.error("Error uploading file:", error);
+      })
+        .finally(() => {
+          this.selectedFile = null;
+          this.$refs.fileInput.value = '';
+        });
+    },
+    sendMessage() {
+      if (this.message.trim() !== '') {
+        this.sendMessageTosocket(this.message, 'text');
+        this.pushMessage(this.message, 'text');
+        this.message = '';
+        this.$nextTick(() => {
+          this.scrollToBottom()
+        })
+      } else if (this.selectedFile) {
+        const fd = new FormData();
+        fd.append('message', this.selectedFile);
+        fd.append('room_id', this.$route.params.id);
+        this.sendImage(fd);
+        this.pushMessage(this.imageUrl, "file");
+        this.imageUrl = ''
+
+        this.$nextTick(() => {
+          this.scrollToBottom()
+        })
+      }
+    },
+    async getMesseges() {
+      await this.$axios.get(`/get-room-messages/${useRoute().params.id}`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res.data.data.messages.data)
+          this.messages = res.data.data.messages.data
+          this.members = res.data.data.members
+          console.log(this.members.image)
+          this.allMessages.push(...this.messages.reverse());
+
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     scrollToBottom() {
-      const container = this.$refs.chatContainer;
-      container.scrollTop = container.scrollHeight;
-      const bottomSpace = 50; // Desired bottom space
-      container.scrollTop =
-        container.scrollHeight - container.clientHeight - bottomSpace;
-      console.log("ss");
+      const chatContainer = this.$refs.chatContainer;
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     },
-  },
-};
+
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -170,10 +241,25 @@ export default {
 }
 
 .chatContainer {
-  height: 300px;
-  overflow: auto;
-  margin-bottom: 30px;
+    height: 500px;
+    overflow-y: auto !important;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background-color: #12a6d85d;
+  }
 }
+
 
 .inputContainer {
   position: absolute;
@@ -184,73 +270,65 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-}
 
-.userImgc {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.containMessege {
-  flex-grow: 1;
-  padding: 5px;
-  border: 1px solid #d5d1d1;
-  border-radius: 4px;
-}
-
-.ltr {
-  direction: ltr !important;
-
-  html[lang="en-Us"] {
-    direction: rtl !important;
-  }
-}
-
-html[lang="en-US"] {
-  .justify-content-start {
-    justify-content: flex-end !important;
-  }
-}
-
-.base-image-input {
-  width: 30px;
-  height: 30px;
-}
-
-.base-image-input {
-  border-radius: 5px;
-}
-
-textarea {
-  flex-grow: 1;
-  border: unset;
-  border: unset !important;
-
-  &:focus-visible {
+  textarea {
+    flex-grow: 1;
     border: unset;
-    outline: unset;
+    border: unset !important;
+    resize: unset;
+
+    &:focus-visible {
+      border: unset;
+      outline: unset;
+    }
+
+
   }
-}
 
-.form-control:focus {
-  border-color: unset !important;
-  outline: 0;
-  box-shadow: unset !important;
-}
+  .textarea:focus {
+    border-color: unset !important;
+    outline: 0;
+    box-shadow: unset !important;
+  }
 
-.main_btn {
-  width: fit-content !important;
-  padding: 8px !important;
+  .main_btn {
+    width: 100px;
+    padding: 3px !important;
+    font-size: 15px;
 
-  .iconSend {
-    display: none;
+    .iconSend {
+      display: none;
 
-    @media (max-width: 768px) {
-      display: block;
+      @media (max-width: 768px) {
+        display: block;
+      }
     }
   }
+
+
+
+
+
+  .base-image-input {
+    width: 30px;
+    height: 30px;
+    border: unset !important;
+    border-radius: 5px;
+
+    .select {
+      /* background: white; */
+      border-radius: 5px;
+      background: #12a7d8;
+      color: white !important;
+
+      svg {
+        width: 15px !important;
+        height: 15px !important;
+      }
+    }
+  }
+
+
 
   .send {
     @media (max-width: 768px) {
@@ -259,16 +337,74 @@ textarea {
   }
 }
 
-.removeSrc {
-  display: none;
+.userImgc {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    // flex-shrink: 0;
+  }
+   
+  .containMessege {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #d5d1d1;
+    border-radius: 4px;
+  }
+
+
+.message {
+  width: 50%;
+
+  &.receiver {
+    text-align: start;
+
+    // #{$ltr} & {
+    //   direction: rtl;
+    // }
+
+    // #{$rtl} & {
+    //   direction: ltr;
+    // }
+
+    .text {
+      background-color: #fadfe0;
+    }
+
+    .time {
+      margin-inline-start: 15px;
+    }
+
+    .image {
+      padding: 0 !important;
+    }
+  }
 }
 
-.select svg {
-  width: 15px !important;
-  height: 15px !important;
+.messagebodyImg {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 
-.recieve {
-  text-align: end;
+.messageImg {
+  width: 30px;
+  height: 30px;
+
+}
+
+.removeImg {
+  position: absolute;
+  top: -11px;
+  left: 0;
+}
+.wordwrap { 
+   white-space: pre-wrap;      /* CSS3 */   
+   white-space: -moz-pre-wrap; /* Firefox */    
+   white-space: -pre-wrap;     /* Opera <7 */   
+   white-space: -o-pre-wrap;   /* Opera 7 */    
+   word-wrap: break-word;      /* IE */
+   overflow:hidden;
+   max-width: 350px;
 }
 </style>

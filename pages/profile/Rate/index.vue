@@ -81,20 +81,23 @@
                             </div>
                         </div>
                     </div>
-                    <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> {{ $t('Message_Subject') }}
-                    
+                    <inputsFormControl type="text" id="bankName" textarea v-model.trim="messege"> {{ $t('Message_Subject')
+                    }}
+
                     </inputsFormControl>
 
                     <div class="flex-center">
                         <ui-base-button class="main_btn">
                             {{ $t('send') }}
 
-                            </ui-base-button>
+                        </ui-base-button>
                     </div>
-                    <span v-else>
+                    </form>
+                    <!-- <span v-else>
                       {{ slotProps.placeholder }}
-                    </span>
-                  </template>
+                    </span> -->
+
+                    <!-- </template>
                   <template #option="slotProps">
                     <div class="flex-group-me">
                       <img
@@ -105,10 +108,9 @@
                       <div>{{ slotProps.option.code }}</div>
                     </div>
                   </template>
-                </Dropdown>
-              </div>
+                </Dropdown>-->
             </div>
-        </div>
+</div>
     </Dialog>
     <!-- certain -->
     <Dialog v-model:visible="visible2" modal :style="{ width: '50rem' }"
@@ -120,7 +122,6 @@
         </div>
     </Dialog>
     <toast />
-
 </template>
 
 <script>
@@ -133,9 +134,9 @@ import Dialog from 'primevue/dialog';
 import { useAuthStore } from '@/store/authStore';
 
 export default {
-  components: {
-    Dialog,
-  },
+    components: {
+        Dialog,
+    },
 
     data() {
         return {
