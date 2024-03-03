@@ -72,7 +72,11 @@ export default {
                 .then((response) => {
                     if (response.data.key === 'success') {
                         this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
+                    }else{
+                        this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
                     }
+                }).catch((error) => {
+                    this.$toast.add({ detail: `${response.data.msg}`, life: 3000 });
                 })
         }
     },

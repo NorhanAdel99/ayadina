@@ -92,6 +92,7 @@ export default {
       countries: [],
       code: "",
       userMail: "",
+      device_id:'',
       selectedCountry: {
         code: "+966",
       },
@@ -99,6 +100,7 @@ export default {
   },
 
   mounted() {
+    this.device_id = localStorage.getItem('device_id')
     this.axios.get('/country-code')
       .then((response) => {
         console.log('response: ', response.data.data)
@@ -118,14 +120,14 @@ export default {
             phone: this.phone,
             password: this.password,
             country_code: this.code,
-            device_id: 1111111,
-            device_type: web
+            device_id: this.device_id,
+            device_type: 'web'
           });
         } else if (this.email) {
           await useAuthStore().signIn({
             email: this.email,
             password: this.password,
-            device_id: 1111111,
+            device_id: this.device_id,
             device_type: 'web'
           });
         }

@@ -1,13 +1,37 @@
 <template>
   <div>
-    <label for="imageUpload">Select Multiple Images:</label>
-    <input type="file" id="imageUpload" ref="imageInput" :name="name" multiple accept="image/*" @change="handleImageUpload">
 
-    <div id="previewContainer">
-      <div v-for="(image, index) in imagesArray" :key="index" class="image-preview">
+
+    <div id="previewContainer" class="d-flex align=items-center gap-10 my-2">
+      <label for="imageUpload" class="base-image-input">
+      <input
+        type="file"
+        id="imageUpload"
+        ref="imageInput"
+        :name="name"
+        multiple
+        accept="image/*"
+        @change="handleImageUpload"
+        hidden
+      />
+      <span class="select">
+        <font-awesome-icon icon="fa-solid fa-upload" />
+      </span>
+    </label>
+      <div
+        v-for="(image, index) in imagesArray"
+        :key="index"
+        class="base-image-input"
+      >
         <img :src="image.image" class="preview-image" />
-      
-        <button @click="removeImage(index)">Remove</button>
+
+        <!-- <button @click="removeImage(index)">Remove</button> -->
+        <!-- <span class="select"  @click="removeImage(index)">
+        <font-awesome-icon icon="fa-solid fa-upload" />
+      </span> -->
+        <div class="removeSrc text-danger" @click="removeImage(index)">
+          <font-awesome-icon icon="fa-solid fa-xmark" />
+        </div>
       </div>
     </div>
   </div>
@@ -23,11 +47,11 @@ export default {
   },
   data() {
     return {
-      imagesArray:[], // Initialize with a copy of the prop
+      imagesArray: [], // Initialize with a copy of the prop
       myImgs: [],
     };
   },
-  mounted(){
+  mounted() {
     this.imagesArray = this.images;
     this.myImgs = this.images;
   },
@@ -47,7 +71,7 @@ export default {
             name: `Image ${this.imagesArray.length + 1}`,
           });
           // this.imagesArray.push(...this.images)
-     
+
           // Emit a custom event with the updated images array
           this.$emit("update", this.myImgs);
           // this.$emit("updateMyImgs", this.myImgs);
@@ -66,16 +90,8 @@ export default {
 </script>
 
 <style scoped>
-/* Add some styling to the preview images */
-.image-preview {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.preview-image {
-  max-width: 100px;
-  max-height: 100px;
-  margin-right: 10px;
+.base-image-input img {
+  border-radius: 20px;
+  object-fit: cover;
 }
 </style>

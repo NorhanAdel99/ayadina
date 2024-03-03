@@ -8,10 +8,11 @@
       <div class="col-md-10">
         <ui-base-card class="chatCard">
           <div ref="chatContainer" class="chatContainer">
-         
-            <div class="d-flex gap-2 align-items-center mb-3 message" :class="{ receiver: !message.is_sender }"
+       
+            <div class=" " :class="{ receiver: !message.is_sender }"
               v-for="message in allMessages" :key="message.id">
-              <img :src="members.image" alt="" class="userImgc" />
+              <div class="message message d-flex gap-2 align-items-center mb-3">
+                <img :src="members.image" alt="" class="userImgc" />
               <div class="containMessege">
                 <p v-if="message.type === 'text'" class="wordwrap mb-2">
                   {{ message.body }}
@@ -22,6 +23,8 @@
                   <span> {{ message.created_dt }}</span>
                 </div>
               </div>
+              </div>
+            
              
 
             </div>
@@ -80,6 +83,7 @@ export default {
 
     };
   },
+
   mounted() {
     this.token = useAuthStore().token;
     this.initializeChat();
@@ -109,7 +113,7 @@ export default {
     async initializeChat() {
       await this.getMesseges();
       this.$socket.emit("enterChat", {
-        user_id: useRoute().params.id,
+        user_id: useAuthStore().user.id,
         user_type: 'User',
         room_id: useRoute().params.id,
       });
@@ -356,30 +360,15 @@ export default {
 .message {
   width: 50%;
 
-  &.receiver {
+
+}
+.receiver {
     text-align: start;
 
-    // #{$ltr} & {
-    //   direction: rtl;
-    // }
+  direction: ltr;
 
-    // #{$rtl} & {
-    //   direction: ltr;
-    // }
-
-    .text {
-      background-color: #fadfe0;
-    }
-
-    .time {
-      margin-inline-start: 15px;
-    }
-
-    .image {
-      padding: 0 !important;
-    }
+   
   }
-}
 
 .messagebodyImg {
   width: 100px;

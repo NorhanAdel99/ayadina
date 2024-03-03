@@ -15,12 +15,8 @@
           </ui-base-button>
       </div>
   </template>
-  <!-- <script>
-  export default{
-    data(){
-        return{
-            localePath: useLocalePath()
-        }
-    }
-  }
-</script> -->
+<style scoped>
+.main_btn{
+    border: unset !important
+}
+</style>

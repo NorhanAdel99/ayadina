@@ -1,5 +1,5 @@
 <template>
-  <div :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
+  <div :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" class="dir">
     <Toast />
     <header>
       <div class="container">
@@ -31,7 +31,7 @@
               }}</NuxtLink>
             </li>
             <li>
-              <!-- <lang-switcher></lang-switcher> -->
+              <lang-switcher></lang-switcher>
             </li>
             <li>
               <NuxtLink :to="localePath('/notification')" class="notificationBox">
@@ -57,7 +57,7 @@
                 {{ $t("login") }}</NuxtLink>
             </li>
             <li>
-              <!-- <lang-switcher></lang-switcher> -->
+              <lang-switcher></lang-switcher>
             </li>
           </ul>
         </div>
@@ -166,6 +166,14 @@ import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export default {
+  head() {
+    return {
+      htmlAttrs: {
+        lang: this.head.htmlAttrs.lang,
+        dir: this.head.htmlAttrs.dir,
+      },
+    };
+  },
   data() {
     return {
       localePath: useLocalePath(),
@@ -187,14 +195,20 @@ export default {
     };
   },
   computed: {
+    htmlAttrs() {
+      console.log(this.$nuxt.context.head.htmlAttrs)
+      return this.$nuxt.context.head.htmlAttrs;
+    },
     isAuthenticated() {
       if (process.client) {
         return useAuthStore().isAuthenticated;
       }
       return false;
     },
+
   },
   mounted() {
+    console.log(useNuxtApp().$i18n.defaultLocale)
     this.user = useAuthStore().user;
     this.token = useAuthStore().token;
     this.CountNotifecation();
@@ -216,9 +230,10 @@ export default {
       vapidKey:
         "BAaE3CbHQVzW52bDpNdPxuTeG75GaePou4EGD5-it-Pw4g6F5tp0x-22rXcDy_A-5aXfzMzuOgOTNe1AdVNITvs",
     })
-      .then((currentToken) => {
+    .then((currentToken) => {
         if (currentToken) {
           console.log("token", currentToken);
+          localStorage.setItem('device_id', currentToken)
         } else {
           console.log(
             "No registration token available. Request permission to generate one."

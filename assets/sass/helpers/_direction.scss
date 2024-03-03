@@ -15,17 +15,35 @@
 */
 
 /* Clearfix */
-html {
+.dir {
     &[dir="ltr"] {
-      $dir: 'ltr' ;
+      direction: ltr !important;
       text-align: left;
+      .p-carousel-prev, .p-carousel-next {
+        transform: unset
+    }
+    .receiver{
+        direction: rtl;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        float: left !important;
+    }
+
+      .p-multiselect-panel {
+        direction: ltr !important;
+      }
     }
     &[dir="rtl"] {
-      $dir: 'rtl' ;
+        direction: rtl  !important;
       text-align: right;
+      .p-multiselect-panel {
+        direction: rtl !important;
+      }
+    }
+    
   
     }
-  }
+  
 
 @mixin clearfix {
     &::after {

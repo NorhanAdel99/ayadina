@@ -54,7 +54,15 @@
 
         <div class="d-flex align-items-center gap-10 flex-wrap mb-3">
           
-          <inputs-img-preview-multi name="images[]" :onRemove="handleImageRemove" @update:images="handleImageUpdate" />
+       
+          <inputs-img-preview-multi
+          name="images[]"
+          :key="images"
+          :onRemove="handleImageRemove"
+          :modelValue="images"
+          @update="updateImageUrl"
+          :images="images"
+        />
         </div>
         <div class="flex-center">
           <!-- @click="visible = true" label="Show" -->
@@ -152,13 +160,12 @@ export default {
         });
   },
   methods: {
-    handleImageUpdate(updatedImages) {
-      // Handle the updated images in the parent component
-      this.images = updatedImages;
+    updateImageUrl(newImageUrl) {
+      this.images = newImageUrl;
+      console.log(this.images);
     },
-
+ 
     handleImageRemove(index) {
-      // Handle image removal logic here
       console.log(`Image at index ${index} removed`);
     },
 

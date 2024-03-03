@@ -139,12 +139,8 @@ export default {
       this.images = newImageUrl;
       console.log(this.images);
     },
-    // updateMyImgsF(newImageUrl) {
-    //   this.images = newImageUrl;
-    // },
-
+ 
     handleImageRemove(index) {
-      // Handle image removal logic here
       console.log(`Image at index ${index} removed`);
     },
 

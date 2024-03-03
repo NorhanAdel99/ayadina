@@ -22,7 +22,8 @@ export const useAuthStore = defineStore("auth", {
         if (email) {
           loginData = { log: email, password ,  device_id , device_type };
         } else if (phone) {
-          loginData = { log: phone, password, country_code: country_code ,device_id  , device_type };
+          loginData = { log: phone, password, country_code: country_code ,device_id  , device_type
+          };
         }
 
         const res = await this.axios.post("/sign-in", loginData);
@@ -64,9 +65,9 @@ export const useAuthStore = defineStore("auth", {
           this.toast.errorToast(error);
         });
     },
-    async otp({ code, email }) {
+    async otp({ code, email ,device_id}) {
       this.axios
-        .post("/activate", { code, email })
+        .post("/activate", { code, email ,device_id })
         .then((response) => {
           if (response.data.key === "success") {
             this.isAuthenticated = true;

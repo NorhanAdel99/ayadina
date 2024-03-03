@@ -25,7 +25,7 @@
 
     <div class="row" v-else>
         <div class="col-lg-2  col-sm-4  col-6" v-for="category in categories" :key="category.id">
-            <NuxtLink :to="'/' + category.id" class="mainCard text-dark mb-4">
+            <NuxtLink :to="LocalePath('/' + category.id)" class="mainCard text-dark mb-4">
                 <img :src="category.image" alt="" class="rounded-50">
                 <h5 class="title"> {{ category.name }}</h5>
             </NuxtLink>
@@ -42,6 +42,7 @@ export default {
             categories: [],
             counter: '',
             store: counterStore(),
+            LocalePath: useLocalePath()
 
         }
     },

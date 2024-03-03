@@ -135,8 +135,8 @@
     "confirm_password":"    تأكيد كلمة المرور" ,
     "I_agree_to_the_terms":"   أوافق علي الشروط والأحكام ",
     "Create_account":" إنشاء حساب ",
-    "skip":"تخطي"
-
+    "skip":"تخطي",
+   "noProviders" :  "لا يوجد مقدمي خدمه"
 
 
 

@@ -51,10 +51,12 @@ export default {
       value: "",
       token: "",
       user: "",
+      device_id: "",
     };
   },
   mounted() {
     this.userMail = localStorage.getItem("email");
+    this.device_id = localStorage.getItem('device_id')
   },
   methods: {
     handleOnComplete(value) {
@@ -66,7 +68,7 @@ export default {
     },
     async activation() {
             try {
-                await useAuthStore().otp({ code: this.code, email: this.userMail});
+                await useAuthStore().otp({ code: this.code, email: this.userMail , device_id: this.device_id });
                
             } catch (error) {
                 console.error('Login error:', error);

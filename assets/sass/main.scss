@@ -23,13 +23,14 @@
 }
 #__nuxt {
   font-family: "Kaff" !important;
+  font-size: 14px;
 }
 // .btn{
 //   background-color: unset ;
 // }
 .main_btn {
   background-color: $main_color;
-  border: 1px solid transparent !important;
+  border: 1px solid transparent ;
   border-radius: 7px;
   width: 150px;
   display: flex;
@@ -38,22 +39,27 @@
   color: $wh;
   padding: 5px 0 !important;
   font-size: 17px;
+  transition: all .5s ease-in-out;
 
   
   &:hover {
-    color: $main-color !important;
-    border: 1px solid $main_color !important;
-    background-color: transparent !important;
+ 
   }
   &.text-danger:hover,
   .text-danger {
     color: #dc3545 !important;
   }
-  &.btn-danger,
-  .btn-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
+  &.btn-danger{
+    border:1px solid #ff0000  !important;
+    &:hover{
+      background-color: #ff0000 !important;
+      color: white !important;
+    }  }
+    &.border-danger{
+      border:1px solid #ff0000  !important;
+    }
+
+  
 }
 
 .main_btn.lg {
@@ -64,6 +70,8 @@
 .transparent_btn {
   background-color: transparent;
   color: $main_color !important;
+  border: 1px solid $main_color !important;
+
   &:hover {
     color: $main_color !important;
   }
@@ -72,6 +80,7 @@
 // ===================== header ===================== //
 header {
   border-bottom: 1px solid $main_color;
+  transition: all .3s ease-in-out;
 }
 
 .logotext {
@@ -573,6 +582,7 @@ header {
 .p-carousel-next {
   transform: rotate(180deg);
 }
+
 .main_border {
   border: 1px solid $main-color;
 }
@@ -621,7 +631,7 @@ header {
   display: none !important;
 }
 .fixedBox {
-  width: 200px !important;
+  width: 180px !important;
 }
 
 

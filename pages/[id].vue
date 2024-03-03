@@ -34,13 +34,13 @@
             </div>
           </NuxtLink>
         </div>
-        <ui-no-data class="d-none noData"> لا يوجد مقدمي خدمه </ui-no-data>
+        <ui-no-data class="d-none noData"> {{ $t('noProviders') }}</ui-no-data>
       </div>
     </div>
     <div class="col-lg-4">
       <div class="rounded-2 p-2 main_border mb-3">
         <div class="flex-between border-bottom mb-3 py-3">
-          <h5 class="title-border main_color">الطلبات الخاصة</h5>
+          <h6 class="title-border main_color">الطلبات الخاصة</h6>
         </div>
         <div v-for="order in mySpecialOrders" :key="order.id" class="rounded-2 p-2 main_border mb-3">
           <div class="flex-between">
@@ -114,6 +114,7 @@ export default {
       searchProviders: "",
       mySpecialOrders: [],
       providers: [],
+      pagination: '',
       visible3: false,
       sub_category_id: null,
       title: "",
@@ -246,6 +247,9 @@ export default {
           console.log(response);
           if (response.data.key == "success") {
             this.providers = response.data.data.providers;
+        
+    this.pagination = response.data.data.pagination;
+    console.log(this.pagination)
             if (this.providers.length == 0) {
               document.querySelector(".noData").classList.remove("d-none");
             } else {

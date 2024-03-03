@@ -40,12 +40,13 @@ export default defineNuxtConfig({
         dir: "rtl",
       },
     ],
-    defaultLocale: "ar",
-    // vueI18n: {
-    //   fallbackLocale: "en",
-    //   locale : 'ar'  || defaultLocale ,
-     
-    // },
+    defaultLocale: 'ar',
+
+  
+    detectBrowserLanguage: {
+      useCookie: true,
+      fallbackLocale: 'ar',
+    },
   },
   build: {
     transpile: [
